@@ -4,7 +4,7 @@ export const personalDetails = {
 
 export const socialLinks = {
   github: "https://github.com/hanzalahwaheed",
-  twitter: "https://twitter.com/hanzalahwaheed",
+  twitter: "https://x.com/waheed_hanzalah",
   linkedin: "https://linkedin.com/in/hanzalahwaheed",
 }
 
