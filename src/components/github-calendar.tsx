@@ -11,6 +11,7 @@ interface GitHubCalendarProps {
 const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarProps) => {
   const currentYear = new Date().getFullYear()
   const [selectedYear, setSelectedYear] = useState(currentYear)
+  const Calendar = (GitHubCalendar as unknown as { default?: typeof GitHubCalendar }).default || GitHubCalendar
 
   const years = useMemo(() => {
     return Array.from({ length: 4 }, (_, i) => currentYear - i)
@@ -35,7 +36,7 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
       </div>
 
       <div className="github-calendar-wrapper custom-scrollbar w-full overflow-x-auto pb-2">
-        <GitHubCalendar
+        <Calendar
           username={username}
           year={selectedYear}
           colorScheme="dark"
@@ -52,7 +53,7 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
         />
       </div>
 
-      <style jsx>{`
+      <style>{`
         .github-calendar-wrapper :global(.react-activity-calendar) {
           background: transparent !important;
         }

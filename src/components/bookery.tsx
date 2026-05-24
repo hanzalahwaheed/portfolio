@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import { Star, ArrowRight, Quote } from "lucide-react"
 
 import { books as library, bookCategories as categories, Book } from "../config"
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 const Bookery = () => {
   const [activeBook, setActiveBook] = useState<Book>(library[0])
@@ -132,7 +132,6 @@ const Bookery = () => {
           <div className="animate-float relative">
             {/* The Book Cover */}
             <div className="group perspective-1000 relative z-20 aspect-[2/3] w-[260px] rounded-sm shadow-2xl md:w-[320px]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={activeBook.cover}
                 alt={activeBook.title}
@@ -148,7 +147,6 @@ const Bookery = () => {
 
             {/* Reflection on 'floor' */}
             <div className="mask-linear-fade absolute right-0 -bottom-4 left-0 z-10 h-full origin-bottom scale-y-[-1] transform opacity-20 blur-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={activeBook.cover} className="h-full w-full object-cover" alt="" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#061113] via-[#061113]/80 to-transparent"></div>
             </div>
@@ -195,7 +193,7 @@ const Bookery = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%,
           100% {

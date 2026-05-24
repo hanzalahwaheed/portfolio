@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "@/components/app-image"
 
 interface BackgroundImageProps {
   src: string

@@ -1,18 +1,42 @@
-import { dirname } from "path"
-import { fileURLToPath } from "url"
-import { FlatCompat } from "@eslint/eslintrc"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
+import js from "@eslint/js"
+import tseslint from "typescript-eslint"
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"],
+    ignores: [
+      "node_modules/**",
+      ".tanstack/**",
+      ".nitro/**",
+      ".output/**",
+      "dist/**",
+      "build/**",
+      "portfolio-tanstack-template/**",
+      "src/routeTree.gen.ts",
+    ],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        document: "readonly",
+        window: "readonly",
+        localStorage: "readonly",
+        navigator: "readonly",
+        FormData: "readonly",
+        File: "readonly",
+        Response: "readonly",
+        Request: "readonly",
+        Headers: "readonly",
+        Buffer: "readonly",
+        process: "readonly",
+        React: "readonly",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
   },
 ]
 

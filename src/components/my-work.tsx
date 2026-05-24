@@ -1,7 +1,7 @@
-import Link from "next/link"
+import Link from "@/components/app-link"
 import GitHubCalendar from "./github-calendar"
 import OssContributions from "./oss-contributions"
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 import { workExperiences, personalDetails, WorkExperience } from "../config"
 

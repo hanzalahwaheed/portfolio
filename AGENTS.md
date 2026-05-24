@@ -1,139 +1,88 @@
 # AGENTS.md
 
-This file provides guidelines for agentic coding assistants working in this repository.
+This file provides guidance to agentic coding assistants working in this repository.
 
-## Build, Lint, and Format Commands
+## Overview
 
-### Development
+A personal **portfolio + blog CMS**. TanStack Start handles both frontend and backend (SSR pages, server functions, API routes), deployed to **Cloudflare Workers** via Nitro, with **Cloudflare D1 + Drizzle ORM** for storage. The blog has a cookie-gated admin area for authoring/editing posts and uploading images to R2.
 
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build for production with Turbopack
-- `npm run start` - Start production server
+## Commands
 
-### Code Quality
+```bash
+npm run dev          # Vite dev server on port 3000
+npm run build        # Vite production build (Nitro → Cloudflare module)
+npm run start        # vite preview
+npm run lint         # ESLint (flat config, eslint.config.mjs)
+npm run format       # Prettier write
 
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
+npm run db:generate  # Generate migrations
+npm run db:migrate   # Apply D1 migrations locally
+npm run db:migrate:prod # Apply D1 migrations to the remote Cloudflare database
+npm run db:studio    # List local D1 tables
+npm run db:introspect # List remote D1 tables
+npm run db:verify    # Count rows in the remote Post table
+npm run db:verify:local # Count rows in the local Post table
+```
 
-### Database Operations
+No test framework is configured. Verify changes manually with `npm run dev`.
 
-- `npm run db:generate` - Generate Drizzle migrations
-- `npm run db:migrate` - Apply migrations
-- `npm run db:push` - Push schema changes to database
-- `npm run db:studio` - Open Drizzle Studio
-- `npm run db:introspect` - Introspect existing database
-- `npm run db:verify` - Verify database tables
+## Architecture
 
-### Testing
+**Stack:** TanStack Start (file-based routing via `@tanstack/react-router`), React 19, Vite 8, Tailwind v4, Drizzle ORM on Cloudflare D1, deployed as a Cloudflare Worker module through Nitro.
 
-No test framework is configured. When running tests is mentioned, assume manual testing via `npm run dev`.
+### Routing (`src/routes/`)
 
-## Code Style Guidelines
+File-based routes compiled into `src/routeTree.gen.ts` (generated — never edit by hand; it's gitignored from lint). Route entry is `src/router.tsx`; the document shell is `src/routes/__root.tsx`. Dotted filenames map to path segments: `blogs.$slug.tsx` → `/blogs/:slug`, `admin.edit.$id.tsx` → `/admin/edit/:id`. Bracketed literal dots like `sitemap[.]xml.ts` produce `/sitemap.xml`.
 
-### TypeScript Configuration
+Two kinds of route files:
 
-- Strict mode enabled
-- Path aliases: `@/*` maps to `./src/*`
-- Target: ES2017
-- Module resolution: bundler
+- **Page routes** use `createFileRoute(...)({ loader, head, component })`. Data is fetched in `loader` (calling a server fn) and read in the component via `Route.useLoaderData()`. `head` sets meta/links per route.
+- **API / non-HTML routes** (`api.upload.ts`, `sitemap[.]xml.ts`, `*-image.ts`, `robots[.]txt.ts`) use `createFileRoute(...)({ server: { handlers: { GET/POST: async ({ request }) => Response } } })` and return a raw `Response`.
 
-### Formatting (Prettier)
+### Server functions (the core data-access pattern)
 
-- No semicolons
-- Double quotes
-- Trailing commas: all
-- Arrow parentheses: avoid
-- Spaces: 2
-- Print width: 120
-- Line ending: LF
+Server-only logic lives in `src/lib/*.ts` as `createServerFn({ method })` definitions (see `src/lib/blogs.ts`). Conventions:
 
-### Imports
+- Validate input with `.inputValidator(...)`, implement in `.handler(async ({ data }) => ...)`.
+- Server fns can be called from loaders (SSR) or client code; they always run on the server.
+- After a successful mutation, `throw redirect({ to: "..." })` from `@tanstack/react-router`.
 
-- Use absolute imports with `@/` alias (e.g., `import { cn } from "@/lib/utils"`)
-- External libraries first, then local imports
-- Server actions must have `"use server"` at the top
-- Client components must have `"use client"` at the top
+### Auth (admin-only mutations)
 
-### Naming Conventions
+Cookie-based, key gated by the `ADMIN_KEY` env var. Split across two files by execution context:
 
-- **Components**: PascalCase (e.g., `BlogCard`, `AboutMe`)
-- **Functions**: camelCase (e.g., `getPosts`, `createPost`)
-- **Variables**: camelCase (e.g., `isLoading`, `articles`)
-- **Types/Interfaces**: PascalCase (e.g., `Article`, `Post`, `WorkExperience`)
-- **Constants**: camelCase (e.g., `personalDetails`, `socialLinks`)
-- **Database tables**: pgTable with explicit name (e.g., `"Post"`)
+- `src/lib/admin-auth.server.ts` — server-only helpers using `@tanstack/react-start/server` (`getCookie`/`setCookie`/`getRequest`). `verifyAdminFromRequestUrl()` accepts `?key=` and sets the `admin-key` cookie; `requireAdmin()` redirects to `/` if unauthorized; `requireAdminForMutation()` throws `Unauthorized`.
+- `src/lib/admin-auth.ts` — exports `ensureAdmin`, a thin server fn wrapper.
 
-### Component Structure
+Every admin server fn / API handler **dynamically imports** the `.server` helper inside the handler (e.g. `const { requireAdmin } = await import("@/lib/admin-auth.server")`) so server-only code never leaks into client bundles. Follow this pattern for any new admin-gated work.
 
-- Default export the main component
-- Component name matches file name
-- Define TypeScript interfaces for props
-- Use functional components with hooks
-- Use Shadcn UI components from `@/components/ui`
+### Database (`src/db/`)
 
-### Database (Drizzle ORM)
+`src/db/index.ts` exports a singleton `db` using Drizzle's D1 driver and the Cloudflare Worker `DB` binding. The binding is configured in `vite.config.ts` under Nitro's generated Wrangler config. `src/db/schema.ts` defines the `posts` table mapped to the SQLite table name `Post`. IDs are uuidv7 strings generated in app code, not by the DB.
 
-- Use `db.select().from(table).where(...)` pattern
-- Import query operators: `eq`, `desc`, etc. from `drizzle-orm`
-- Use `.where(eq(column, value))` for equality checks
-- Use `.orderBy(desc(column))` for sorting
-- Infer types from schema: `typeof table.$inferSelect`
+Use Drizzle's SQLite core for schema changes:
 
-### Server Actions
+- `sqliteTable` from `drizzle-orm/sqlite-core`
+- `text(...)` for strings
+- `integer(..., { mode: "boolean" })` for booleans
+- `integer(..., { mode: "timestamp" })` for dates
 
-- Always verify admin access with `verifyAdmin()` before mutations
-- Throw `new Error("Unauthorized")` for failed auth
-- Call `revalidatePath()` after mutations
-- Use `redirect()` after successful mutations
-- Handle FormData with `.get()` and type assertions
+After changing schema, run `npm run db:generate`, then apply locally with `npm run db:migrate` and remotely with `npm run db:migrate:prod`.
 
-### API Routes
+The production D1 database is `portfolio-db`, bound as `DB`. Local dev also uses the remote D1 database because `wrangler.jsonc` sets the D1 binding's `remote` flag to `true`.
 
-- Use `NextRequest` and `NextResponse` from `next/server`
-- Return proper status codes: 400 for bad requests, 500 for errors
-- Handle errors with try/catch blocks
-- Log errors with `console.error()`
+### Other libs
 
-### Error Handling
+- `src/lib/r2.ts` — uploads to Cloudflare R2 via the S3 SDK (used by `api.upload.ts`).
+- `src/lib/fonts.ts` — local Google Sans (from `src/fonts/`) + Instrument Serif font objects exposing `.variable` / `.className`.
+- `src/config.ts` — **all site content** (personal details, socials, OSS contributions, work experience, builds, books). Edit here to change displayed content.
+- `src/components/app-image.tsx` / `app-link.tsx` — replacements for `next/image` and `next/link`; use these instead of Next equivalents.
 
-- Server actions: throw `Error` objects
-- API routes: return `NextResponse.json({ error: "message" }, { status })`
-- Client components: console.error for logging, display user-friendly messages
+## Conventions
 
-### Styling (Tailwind CSS)
-
-- Use `cn()` utility for class merging
-- Custom colors: `rich-black`, `gold-dust`, `olive-grey`, `turquoise`, `deep-teal`, `cream`
-- Responsive design with `md:` and `lg:` prefixes
-- Use hover states with `hover:` prefix
-- Transitions with `transition-all duration-xxx`
-
-### File Organization
-
-- `app/` - Next.js App Router (routes, layouts, actions)
-- `components/` - Reusable React components
-- `lib/` - Utility functions and helpers
-- `db/` - Database schema and connection
-- `public/` - Static assets
-
-### Special Patterns
-
-- Configuration: All site content in `src/config.ts`
-- Authentication: Cookie-based admin auth via middleware
-- Environment variables: Use `process.env.VARIABLE_NAME`
-- Database connection: Singleton pattern in `src/db/index.ts`
-
-### What NOT to Do
-
-- Do not add comments unless explicitly requested
-- Do not commit secrets or `.env` files
-- Do not use `any` type - use proper TypeScript types
-- Do not use relative imports from parent directories
-- Do not create test files without user confirmation (no test framework configured)
-
-### Before Submitting Work
-
-1. Run `npm run lint` - fix any issues
-2. Run `npm run format` - ensure consistent formatting
-3. Manually test changes with `npm run dev`
-4. Verify database operations if applicable
+- **Path aliases:** `@/*` and `#/*` both map to `src/*`. Use `@/` in imports (e.g. `@/lib/utils`, `@/components/ui`). No relative imports from parent dirs.
+- **Prettier** (`.prettierrc`): no semicolons, double quotes, trailing commas, arrow parens avoided, 2-space, print width 120, LF.
+- **Components:** Shadcn UI ("new-york" style) in `src/components/ui`; merge classes with `cn()` from `@/lib/utils`. PascalCase component = default export = filename.
+- **Custom Tailwind colors:** `rich-black`, `olive-grey`, `turquoise`, `deep-teal`, `cream`.
+- `@typescript-eslint/no-explicit-any` is **off**, but prefer real types.
+- Do not add comments unless asked.

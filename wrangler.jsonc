@@ -1,0 +1,14 @@
+{
+  "name": "hanzalahwaheed-portfolio",
+  "compatibility_date": "2026-05-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portfolio-db",
+      "database_id": "32aa7b5f-ae40-4e58-889b-1299ef4bf583",
+      "migrations_dir": "drizzle",
+      "remote": true,
+    },
+  ],
+}

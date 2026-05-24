@@ -27,30 +27,25 @@ hljs.configure({
 })
 import { Copy, Check, Moon, Sun, BookOpen, Clock, ChevronRight, ArrowUp } from "lucide-react"
 import { format } from "date-fns"
-import type { Post } from "@/db"
+import type { BlogPost as Post } from "@/lib/blogs"
 import { calculateReadTime } from "@/lib/blog-utils"
-import Link from "next/link"
-import { instrumentSerif } from "@/app/fonts"
+import Link from "@/components/app-link"
+import { instrumentSerif } from "@/lib/fonts"
 
 // Custom remark plugin to wrap standalone code in paragraphs
 const remarkWrapStandaloneCode = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (tree: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const visit = (node: any) => {
       if (node.type === "paragraph") {
         const children = node.children
         // Check if paragraph contains only code elements with optional whitespace
         const hasOnlyCode = children.every(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (child: any) => child.type === "code" || (child.type === "text" && child.value.trim() === ""),
         )
 
         if (hasOnlyCode && children.length > 1) {
           // Split into separate paragraphs
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const newChildren: any[] = []
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           children.forEach((child: any) => {
             if (child.type === "code") {
               newChildren.push({ type: "paragraph", children: [child] })
@@ -245,7 +240,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                   : "border-neutral-200 shadow-xl shadow-neutral-300/30"
               }`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.coverImage}
                 alt={post.title}
@@ -349,7 +343,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                     {children}
                   </a>
                 ),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 code: ({ className, children, node, ...props }: any) => {
                   // Detect inline vs block code:
                   // - Fenced code blocks (```) have a parent <pre> element
@@ -515,7 +508,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
       )}
 
       {/* Highlight.js styles */}
-      <style jsx global>{`
+      <style>{`
         /* Modern Syntax Highlighting Theme */
         .hljs {
           background: transparent !important;

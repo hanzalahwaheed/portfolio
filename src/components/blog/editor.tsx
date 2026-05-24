@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Post } from "@/db"
-import Link from "next/link"
+import type { BlogPost as Post } from "@/lib/blogs"
+import Link from "@/components/app-link"
 import { ArrowLeft, Loader2, Save, ImageIcon, Eye, X } from "lucide-react"
 import { handleApiResponse } from "@/lib/api-client"
 

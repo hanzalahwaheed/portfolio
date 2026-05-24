@@ -1,4 +1,4 @@
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 const Grind = () => {
   return (

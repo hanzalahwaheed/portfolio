@@ -1,7 +1,7 @@
-import Link from "next/link"
+import Link from "@/components/app-link"
 import { CalendarDays } from "lucide-react"
 import { contactLinks, socialLinks } from "@/config"
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 const Socials = () => {
   return (

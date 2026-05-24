@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import Image from "@/components/app-image"
+import Link from "@/components/app-link"
 import { ArrowUpRight, Calendar, Clock, ChevronRight } from "lucide-react"
-import { getPosts } from "@/app/actions/blogs"
-import { Post } from "@/db"
+import { getPosts } from "@/lib/blogs"
+import type { BlogPost as Post } from "@/lib/blogs"
 import { format } from "date-fns"
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 type Article = {
   id: string

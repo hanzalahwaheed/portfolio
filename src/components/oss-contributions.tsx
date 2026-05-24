@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
+import Link from "@/components/app-link"
 import { GitMerge, GitPullRequest, CircleDot, Loader2 } from "lucide-react"
 
 import { ossContributions as staticContributions, OSSContribution, personalDetails } from "../config"

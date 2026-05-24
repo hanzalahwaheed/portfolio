@@ -1,40 +1,20 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Link, Events, scrollSpy } from "react-scroll"
-import NextLink from "next/link"
-import { instrumentSerif } from "@/app/fonts"
+import NextLink from "@/components/app-link"
+import { instrumentSerif } from "@/lib/fonts"
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
-  const [isSmoothScrolling, setIsSmoothScrolling] = useState(false)
 
   useEffect(() => {
-    // Register scroll events
-    Events.scrollEvent.register("begin", () => {
-      setIsSmoothScrolling(true)
-      setIsVisible(true)
-    })
-
-    Events.scrollEvent.register("end", () => {
-      setIsSmoothScrolling(false)
-    })
-
-    scrollSpy.update()
-
-    // Handle manual scroll
     const handleScroll = () => {
-      if (isSmoothScrolling) return
-
       const currentScrollY = window.scrollY
 
-      // Show navbar when scrolling up or at the top
       if (currentScrollY < lastScrollY || currentScrollY < 100) {
         setIsVisible(true)
-      }
-      // Hide navbar when scrolling down (but not at the very top)
-      else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsVisible(false)
       }
 
@@ -44,11 +24,17 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll, { passive: true })
 
     return () => {
-      Events.scrollEvent.remove("begin")
-      Events.scrollEvent.remove("end")
       window.removeEventListener("scroll", handleScroll)
     }
-  }, [lastScrollY, isSmoothScrolling])
+  }, [lastScrollY])
+
+  const scrollToSection = (id: string) => {
+    setIsVisible(true)
+    const element = document.getElementById(id)
+    if (!element) return
+    const top = element.getBoundingClientRect().top + window.scrollY - 80
+    window.scrollTo({ top, behavior: "smooth" })
+  }
 
   return (
     <nav
@@ -60,25 +46,20 @@ const Navbar = () => {
         <div className="flex items-center justify-center space-x-4 px-4 py-2">
           {/* Navigation Links */}
           <div className={`${instrumentSerif.className} flex items-center justify-center space-x-3 md:space-x-6`}>
-            <Link
-              to="about-me"
-              smooth={true}
-              duration={500}
-              offset={-80}
+            <button
+              type="button"
+              onClick={() => scrollToSection("about-me")}
               className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-blue-200"
             >
-              {/* &apos;Bout Me */}
               Me
-            </Link>
-            <Link
-              to="builds"
-              smooth={true}
-              duration={500}
-              offset={-80}
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection("builds")}
               className="hover:text-glow cursor-pointer font-medium text-white transition-colors duration-200"
             >
               Builds
-            </Link>
+            </button>
             <NextLink
               href="/blogs"
               target="_blank"
@@ -86,15 +67,13 @@ const Navbar = () => {
             >
               Blogs
             </NextLink>
-            <Link
-              to="bookery"
-              smooth={true}
-              duration={500}
-              offset={-80}
+            <button
+              type="button"
+              onClick={() => scrollToSection("bookery")}
               className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-blue-200"
             >
               Bookery
-            </Link>
+            </button>
             <NextLink
               href="/resume"
               className="rounded-md bg-white px-2 font-medium text-black transition-colors duration-200"

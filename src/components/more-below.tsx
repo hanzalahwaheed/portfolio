@@ -1,6 +1,6 @@
 "use client"
 
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 export default function MoreBelow() {
   const handleClick = () => {

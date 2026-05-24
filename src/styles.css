@@ -1,0 +1,158 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@font-face {
+  font-family: "Google Sans";
+  src: url("./fonts/Google_Sans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Google Sans";
+  src: url("./fonts/Google_Sans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
+  font-display: swap;
+  font-style: italic;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --background-custom: #f5f5f5;
+  --foreground-custom: #333333;
+  --font-google-sans: "Google Sans", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-background-custom: var(--background-custom);
+  --color-foreground-custom: var(--foreground-custom);
+  --color-rich-black: #2f2a24;
+  --color-olive-grey: #7a7255;
+  --color-turquoise: #4fe0d0;
+  --color-deep-teal: #0b5964;
+  --color-cream: #f2edc5;
+  --font-sans: var(--font-google-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --background-custom: #1a1a1a;
+    --foreground-custom: #e0e0e0;
+  }
+}
+
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8) !important;
+}
+
+.font-instrument {
+  font-family: "Instrument Sans", sans-serif;
+}
+
+.font-instrument-serif {
+  font-family: "Instrument Serif", serif;
+}
+
+.grid-cols-53 {
+  grid-template-columns: repeat(53, minmax(0, 1fr));
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 40s linear infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(102, 172, 182, 0.4);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 224, 208, 0.6);
+  box-shadow: 0 0 8px rgba(79, 224, 208, 0.4);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 172, 182, 0.4) rgba(255, 255, 255, 0.05);
+}
+
+.markdown-content .inline-code {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+.markdown-content p .inline-code,
+.markdown-content li .inline-code {
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+}
+
+.markdown-content h1 .inline-code,
+.markdown-content h2 .inline-code,
+.markdown-content h3 .inline-code,
+.markdown-content h4 .inline-code {
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent !important;
+  padding: 0;
+}

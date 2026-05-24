@@ -1,10 +1,10 @@
-import Image from "next/image"
+import Image from "@/components/app-image"
 import { FlowingCarouselTechStack } from "./flowing-carousel-tech-stack"
 import { MyBuilds } from "./my-builds"
 import { MyWork } from "./my-work"
-import Link from "next/link"
+import Link from "@/components/app-link"
 // import { TechStack } from "./tech-stack"
-import { instrumentSerif } from "@/app/fonts"
+import { instrumentSerif } from "@/lib/fonts"
 
 const AboutMe = () => {
   return (

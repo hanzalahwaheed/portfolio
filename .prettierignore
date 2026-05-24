@@ -1,3 +1,7 @@
 node_modules
 .next
 drizzle
+.output
+.tanstack
+.wrangler
+src/routeTree.gen.ts

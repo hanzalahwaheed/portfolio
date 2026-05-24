@@ -1,18 +1,19 @@
-import { pgTable, text, boolean, timestamp } from "drizzle-orm/pg-core"
+import { sql } from "drizzle-orm"
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
-// Note: Prisma typically creates tables with the exact model name (case-sensitive)
-// If your table is lowercase 'post', change 'Post' to 'post' below
-export const posts = pgTable("Post", {
+export const posts = sqliteTable("Post", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   content: text("content").notNull(),
   excerpt: text("excerpt"),
   coverImage: text("coverImage"),
-  published: boolean("published").notNull().default(false),
-  publishedAt: timestamp("publishedAt"),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull(),
+  published: integer("published", { mode: "boolean" }).notNull().default(false),
+  publishedAt: integer("publishedAt", { mode: "timestamp" }),
+  createdAt: integer("createdAt", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
 })
 
 export type Post = typeof posts.$inferSelect
