@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { createFileRoute, Outlet, useRouter, useRouterState } from "@tanstack/react-router"
 import { format } from "date-fns"
 import { FileText, Pencil, Plus, Trash2 } from "lucide-react"
 import Link from "@/components/app-link"
@@ -10,8 +10,13 @@ export const Route = createFileRoute("/admin")({
 })
 
 function AdminPage() {
+  const pathname = useRouterState({ select: state => state.location.pathname })
   const posts = Route.useLoaderData()
   const router = useRouter()
+
+  if (pathname !== "/admin") {
+    return <Outlet />
+  }
 
   async function handleDelete(id: string) {
     await deletePost({ data: { id } })

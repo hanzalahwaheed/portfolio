@@ -8,6 +8,7 @@ const eslintConfig = [
       ".tanstack/**",
       ".nitro/**",
       ".output/**",
+      ".wrangler/**",
       "dist/**",
       "build/**",
       "portfolio-tanstack-template/**",
