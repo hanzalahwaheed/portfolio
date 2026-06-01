@@ -37,7 +37,6 @@ function BlogPage() {
 
       <div className="relative z-10 container mx-auto max-w-3xl px-6 py-16 md:py-24 lg:max-w-4xl">
         <header className="mb-14 flex flex-col gap-5 md:mb-20">
-          <span className="text-gold-dust font-mono text-xs tracking-[0.3em] uppercase">The Archive</span>
           <h1
             className={`${instrumentSerif.className} text-rich-black dark:text-cream text-6xl leading-[0.95] font-bold tracking-tight md:text-7xl lg:text-8xl`}
           >
