@@ -25,7 +25,7 @@ hljs.configure({
     "md",
   ],
 })
-import { Copy, Check, Moon, Sun, BookOpen, Clock, ChevronRight, ArrowUp } from "lucide-react"
+import { Copy, Check, Moon, Sun, ChevronRight, ArrowUp } from "lucide-react"
 import { format } from "date-fns"
 import type { BlogPost as Post } from "@/lib/blogs"
 import { calculateReadTime } from "@/lib/blog-utils"
@@ -72,6 +72,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
   const codeBlockCounter = useRef(0)
   const [readingProgress, setReadingProgress] = useState(0)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [headerRevealed, setHeaderRevealed] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -107,6 +108,11 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setHeaderRevealed(true))
+    return () => cancelAnimationFrame(id)
+  }, [post.id])
+
   const toggleTheme = () => {
     setIsDark(!isDark)
   }
@@ -129,6 +135,10 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
 
   const readTime = post.readTime || calculateReadTime(post.content)
   const publishedDate = post.createdAt ? format(new Date(post.createdAt), "MMMM d, yyyy") : null
+  const reveal = (delay: string) =>
+    `transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${delay} ${
+      headerRevealed ? "translate-y-0 opacity-100 blur-0" : "translate-y-3 opacity-0 blur-[2px]"
+    }`
 
   return (
     <div
@@ -185,47 +195,72 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
       </nav>
 
       <main className="container mx-auto max-w-3xl px-6 pt-32 pb-24 lg:max-w-4xl xl:max-w-5xl">
-        {/* Article Title Block */}
+        {/* Article Title Block — editorial masthead */}
         <header className="mb-16">
-          <div className="flex flex-col gap-6">
+          {/* Dateline rule: read time ⟷ date, anchored by a fading hairline */}
+          <div className={reveal("delay-0")}>
             <div
-              className={`flex flex-wrap items-center gap-3 font-mono text-xs font-medium tracking-wider uppercase ${
-                isDark ? "text-neutral-500" : "text-neutral-500"
+              className={`flex items-center justify-between font-mono text-[0.7rem] font-medium tracking-[0.25em] uppercase ${
+                isDark ? "text-neutral-400" : "text-neutral-500"
               }`}
             >
-              {publishedDate && (
-                <div className="flex items-center gap-2">
-                  <Clock size={12} />
-                  <span>{publishedDate}</span>
-                </div>
-              )}
-              {publishedDate && (
-                <span className={`h-1 w-1 rounded-full ${isDark ? "bg-neutral-600" : "bg-neutral-400"}`} />
-              )}
-              <div className="flex items-center gap-2">
-                <BookOpen size={12} />
-                <span>{readTime} read</span>
-              </div>
+              <span className="flex items-center gap-2.5">
+                <span className={`block h-1.5 w-1.5 rotate-45 ${isDark ? "bg-turquoise" : "bg-deep-teal"}`} />
+                {readTime} read
+              </span>
+              {publishedDate && <time className="tabular-nums">{publishedDate}</time>}
             </div>
-            <h1
-              className={`${instrumentSerif.className} text-4xl leading-[1.1] tracking-tight md:text-6xl lg:text-7xl ${
-                isDark ? "text-white" : "text-neutral-900"
+            <div
+              className={`mt-4 h-px w-full ${
+                isDark
+                  ? "bg-gradient-to-r from-neutral-700 via-neutral-800 to-transparent"
+                  : "bg-gradient-to-r from-neutral-300 via-neutral-200 to-transparent"
               }`}
-            >
-              {post.title}
-            </h1>
-            <div className="flex items-center gap-4 pt-4">
-              <div
-                className={`h-12 w-px ${isDark ? "bg-gradient-to-b from-neutral-700 to-transparent" : "bg-gradient-to-b from-neutral-300 to-transparent"}`}
+            />
+          </div>
+
+          {/* Title */}
+          <h1
+            className={`${instrumentSerif.className} mt-10 text-4xl leading-[1.05] tracking-tight md:text-6xl lg:text-7xl ${reveal("delay-100")} ${
+              isDark ? "text-white" : "text-neutral-900"
+            }`}
+          >
+            {post.title}
+          </h1>
+
+          {/* Byline: profile photo + name (Instrument Sans) + role */}
+          <div className={`group mt-12 flex items-center gap-4 ${reveal("delay-200")}`}>
+            <div className="relative shrink-0">
+              <img
+                src="/images/pfp.jpeg"
+                alt="Hanzalah Waheed"
+                className={`h-14 w-14 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 ${
+                  isDark ? "ring-1 ring-turquoise/30" : "ring-1 ring-deep-teal/25"
+                }`}
               />
-              <div className="flex flex-col gap-1">
-                <span className={`font-mono text-sm font-medium ${isDark ? "text-neutral-300" : "text-neutral-700"}`}>
-                  Hanzalah Waheed
-                </span>
-                <span className={`font-mono text-xs ${isDark ? "text-neutral-500" : "text-neutral-500"}`}>
-                  Software Engineer · Execution-First
-                </span>
-              </div>
+              <span
+                className={`pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ${
+                  isDark ? "ring-white/10" : "ring-black/5"
+                }`}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span
+                className={`font-instrument text-lg font-semibold tracking-tight ${
+                  isDark ? "text-white" : "text-neutral-900"
+                }`}
+              >
+                Hanzalah Waheed
+              </span>
+              <span
+                className={`flex items-center gap-2 font-mono text-[0.7rem] tracking-[0.18em] uppercase ${
+                  isDark ? "text-neutral-500" : "text-neutral-500"
+                }`}
+              >
+                Software Engineer
+                <span className={isDark ? "text-neutral-600" : "text-neutral-400"}>/</span>
+                Execution-First
+              </span>
             </div>
           </div>
         </header>
