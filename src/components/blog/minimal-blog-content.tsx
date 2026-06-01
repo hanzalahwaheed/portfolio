@@ -251,15 +251,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
               >
                 Hanzalah Waheed
               </span>
-              <span
-                className={`flex items-center gap-2 font-mono text-[0.7rem] tracking-[0.18em] uppercase ${
-                  isDark ? "text-neutral-500" : "text-neutral-500"
-                }`}
-              >
-                Software Engineer
-                <span className={isDark ? "text-neutral-600" : "text-neutral-400"}>/</span>
-                Execution-First
-              </span>
             </div>
           </div>
         </header>
