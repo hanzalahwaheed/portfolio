@@ -30,6 +30,7 @@ export async function uploadToR2(file: File, key: string) {
       Key: key,
       Body: new Uint8Array(await file.arrayBuffer()),
       ContentType: file.type,
+      CacheControl: "public, max-age=31536000, immutable",
     }),
   )
 

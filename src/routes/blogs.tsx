@@ -53,8 +53,8 @@ function BlogPage() {
           </p>
         ) : (
           <div className="flex flex-col">
-            {posts.map((post, index) => (
-              <BlogCard key={post.id} post={post} index={index} />
+            {posts.map(post => (
+              <BlogCard key={post.id} post={post} />
             ))}
           </div>
         )}

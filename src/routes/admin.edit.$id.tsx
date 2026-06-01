@@ -15,5 +15,13 @@ export const Route = createFileRoute("/admin/edit/$id")({
 
 function EditPostPage() {
   const post = Route.useLoaderData()
-  return <Editor post={post} action={formData => updatePost({ data: { id: post.id, formData } })} />
+  return (
+    <Editor
+      post={post}
+      action={formData => {
+        formData.set("id", post.id)
+        return updatePost({ data: formData })
+      }}
+    />
+  )
 }

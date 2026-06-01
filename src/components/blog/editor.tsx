@@ -219,6 +219,7 @@ export function Editor({ post, action }: EditorProps) {
   const [excerpt, setExcerpt] = useState(post?.excerpt || "")
   const [published, setPublished] = useState(post?.published || false)
   const [coverImageUrl, setCoverImageUrl] = useState(post?.coverImage || "")
+  const [readTime, setReadTime] = useState(post?.readTime || "")
   const [isUploading, setIsUploading] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -300,7 +301,13 @@ export function Editor({ post, action }: EditorProps) {
                   </div>
                   <div>
                     <MinimalLabel>Read Time</MinimalLabel>
-                    <MinimalInput name="readTime" placeholder="e.g. 5 min" className="font-mono text-neutral-400" />
+                    <MinimalInput
+                      name="readTime"
+                      value={readTime}
+                      onChange={e => setReadTime(e.target.value)}
+                      placeholder="e.g. 5 min (auto if blank)"
+                      className="font-mono text-neutral-400"
+                    />
                   </div>
                 </div>
 

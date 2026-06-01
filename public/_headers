@@ -1,0 +1,22 @@
+/assets/*
+  Cloudflare-CDN-Cache-Control: public, max-age=31536000, immutable
+
+/uploads/*
+  Cache-Control: public, max-age=31536000, immutable
+  Cloudflare-CDN-Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+  Cloudflare-CDN-Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/favicon.ico
+  Cache-Control: public, max-age=86400
+  Cloudflare-CDN-Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+  Cloudflare-CDN-Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
+  Cloudflare-CDN-Cache-Control: public, max-age=300, stale-while-revalidate=3600

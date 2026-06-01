@@ -127,8 +127,8 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const readTime = calculateReadTime(post.content)
-  const publishedDate = post.publishedAt ? format(new Date(post.publishedAt), "MMMM d, yyyy") : null
+  const readTime = post.readTime || calculateReadTime(post.content)
+  const publishedDate = post.createdAt ? format(new Date(post.createdAt), "MMMM d, yyyy") : null
 
   return (
     <div

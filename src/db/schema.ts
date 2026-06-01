@@ -8,6 +8,7 @@ export const posts = sqliteTable("Post", {
   content: text("content").notNull(),
   excerpt: text("excerpt"),
   coverImage: text("coverImage"),
+  readTime: text("readTime"),
   published: integer("published", { mode: "boolean" }).notNull().default(false),
   publishedAt: integer("publishedAt", { mode: "timestamp" }),
   createdAt: integer("createdAt", { mode: "timestamp" })

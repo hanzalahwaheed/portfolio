@@ -20,7 +20,8 @@
     "db:verify": "wrangler d1 execute portfolio-db --remote --command \"SELECT COUNT(*) AS count FROM Post\"",
     "db:verify:local": "wrangler d1 execute portfolio-db --local --command \"SELECT COUNT(*) AS count FROM Post\"",
     "db:export:neon": "tsx scripts/export-neon-posts-to-d1-sql.ts",
-    "db:import:d1": "wrangler d1 execute portfolio-db --remote --file tmp/neon-posts-d1-import.sql"
+    "db:import:d1": "wrangler d1 execute portfolio-db --remote --file tmp/neon-posts-d1-import.sql",
+    "doctor": "npx react-doctor@latest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.953.0",
@@ -77,6 +78,7 @@
     "postgres": "^3.4.9",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "react-doctor": "^0.2.8",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5",

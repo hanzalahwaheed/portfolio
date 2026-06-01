@@ -4,4 +4,5 @@ drizzle
 .output
 .tanstack
 .wrangler
+public/_headers
 src/routeTree.gen.ts
