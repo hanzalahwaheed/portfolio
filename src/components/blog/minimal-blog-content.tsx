@@ -205,7 +205,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
               }`}
             >
               <span className="flex items-center gap-2.5">
-                <span className={`block h-1.5 w-1.5 rotate-45 ${isDark ? "bg-turquoise" : "bg-deep-teal"}`} />
                 {readTime} read
               </span>
               {publishedDate && <time className="tabular-nums">{publishedDate}</time>}
@@ -277,7 +276,9 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
             >
               <img
                 src={post.coverImage}
-                alt={post.title}
+                alt={`Cover image for ${post.title}`}
+                fetchPriority="high"
+                decoding="async"
                 className="h-auto w-full transition-transform duration-700 hover:scale-[1.02]"
               />
               <div
