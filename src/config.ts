@@ -9,6 +9,7 @@ export const socialLinks = {
 }
 
 export const contactLinks = {
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hanzalah.w@gmail.com",
   scheduleCall: process.env.NEXT_PUBLIC_CALCOM_URL ?? "https://cal.com/hanzalahwaheed",
 }
 

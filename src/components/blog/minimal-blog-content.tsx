@@ -25,12 +25,13 @@ hljs.configure({
     "md",
   ],
 })
-import { Copy, Check, Moon, Sun, ChevronRight, ArrowUp } from "lucide-react"
+import { Copy, Check, Moon, Sun, ArrowLeft, ArrowUp, Mail, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import type { BlogPost as Post } from "@/lib/blogs"
 import { calculateReadTime } from "@/lib/blog-utils"
 import Link from "@/components/app-link"
 import { instrumentSerif } from "@/lib/fonts"
+import { contactLinks } from "@/config"
 
 // Custom remark plugin to wrap standalone code in paragraphs
 const remarkWrapStandaloneCode = () => {
@@ -72,8 +73,10 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
   const codeBlockCounter = useRef(0)
   const [readingProgress, setReadingProgress] = useState(0)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [headerRevealed, setHeaderRevealed] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("blog-theme")
@@ -98,13 +101,19 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const docHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
       const progress = Math.min((scrollTop / docHeight) * 100, 100)
+      const isScrollingUp = scrollTop < lastScrollY.current
+      const isPastHeader = scrollTop > 120
+
       setReadingProgress(progress)
       setShowBackToTop(scrollTop > 500)
+      setIsHeaderVisible(scrollTop < 80 || isScrollingUp || !isPastHeader)
+      lastScrollY.current = scrollTop
     }
 
-    window.addEventListener("scroll", handleScroll)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -156,27 +165,22 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
 
       {/* Minimal Header */}
       <nav
-        className={`fixed top-0 z-40 w-full border-b backdrop-blur-md transition-colors ${
+        className={`fixed top-0 z-40 w-full border-b backdrop-blur-md transition-all duration-300 ease-out ${
           isDark ? "border-neutral-800 bg-neutral-950/90" : "border-neutral-200 bg-white/90"
-        }`}
+        } ${isHeaderVisible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"}`}
       >
         <div className="container mx-auto flex h-16 max-w-3xl items-center justify-between px-6 lg:max-w-4xl xl:max-w-5xl">
-          <Link href="/blogs" className="group flex items-center gap-2 text-sm transition-all">
-            <ChevronRight
-              size={16}
-              className={`transition-transform duration-200 ${
-                isDark
-                  ? "text-neutral-500 group-hover:-translate-x-1 group-hover:text-white"
-                  : "text-neutral-600 group-hover:-translate-x-1 group-hover:text-neutral-900"
-              }`}
-            />
-            <span
-              className={`font-medium tracking-tight transition-colors ${
-                isDark ? "text-neutral-400 group-hover:text-white" : "text-neutral-600 group-hover:text-neutral-900"
-              }`}
-            >
-              All Posts
-            </span>
+          <Link
+            href="/blogs"
+            aria-label="Back to all posts"
+            className={`group inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-sm font-medium shadow-sm transition-all duration-200 ${
+              isDark
+                ? "border-neutral-800 bg-neutral-900/70 text-neutral-300 shadow-black/20 hover:border-[#66acb6]/40 hover:bg-neutral-900 hover:text-white"
+                : "border-neutral-200 bg-white/80 text-neutral-700 shadow-neutral-200/70 hover:border-[#0B5964]/30 hover:bg-neutral-50 hover:text-neutral-950"
+            }`}
+          >
+            <ArrowLeft size={16} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+            <span className="tracking-tight">All posts</span>
           </Link>
           <div className="flex items-center gap-2">
             <button
@@ -517,6 +521,60 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
             </ReactMarkdown>
           </div>
         </article>
+
+        <footer
+          className={`mt-24 border-t pt-10 ${
+            isDark ? "border-neutral-800 text-neutral-300" : "border-neutral-200 text-neutral-700"
+          }`}
+        >
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <p
+                className={`font-mono text-xs font-medium tracking-[0.22em] uppercase ${
+                  isDark ? "text-[#66acb6]" : "text-[#0B5964]"
+                }`}
+              >
+                Continue the conversation
+              </p>
+              <h2
+                className={`${instrumentSerif.className} mt-3 text-3xl leading-tight tracking-tight ${
+                  isDark ? "text-white" : "text-neutral-950"
+                }`}
+              >
+                Want to talk about this?
+              </h2>
+              <p className={`mt-3 text-base leading-relaxed ${isDark ? "text-neutral-400" : "text-neutral-600"}`}>
+                Send me a note if this sparked an idea, a question, or something worth building.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:items-end">
+              <a
+                href={`mailto:${contactLinks.email}`}
+                className={`inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-medium transition-all duration-200 ${
+                  isDark
+                    ? "bg-[#66acb6] text-neutral-950 hover:bg-[#7fc3cc]"
+                    : "bg-[#0B5964] text-white hover:bg-[#0f6f7d]"
+                }`}
+              >
+                <Mail size={16} />
+                Email me
+              </a>
+              <a
+                href={contactLinks.scheduleCall}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-medium transition-all duration-200 ${
+                  isDark
+                    ? "border-neutral-800 text-neutral-300 hover:border-neutral-700 hover:bg-neutral-900 hover:text-white"
+                    : "border-neutral-200 text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950"
+                }`}
+              >
+                <Calendar size={16} />
+                Book a call
+              </a>
+            </div>
+          </div>
+        </footer>
       </main>
 
       {/* Back to Top Button */}
