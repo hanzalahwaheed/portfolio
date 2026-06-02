@@ -529,13 +529,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
         >
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-xl">
-              <p
-                className={`font-mono text-xs font-medium tracking-[0.22em] uppercase ${
-                  isDark ? "text-[#66acb6]" : "text-[#0B5964]"
-                }`}
-              >
-                Continue the conversation
-              </p>
               <h2
                 className={`${instrumentSerif.className} mt-3 text-3xl leading-tight tracking-tight ${
                   isDark ? "text-white" : "text-neutral-950"
