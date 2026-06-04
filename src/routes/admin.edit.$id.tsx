@@ -10,6 +10,12 @@ export const Route = createFileRoute("/admin/edit/$id")({
     }
     return post
   },
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `${loaderData?.title ?? "Edit Post"} | Hanzalah Waheed` },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: EditPostPage,
 })
 

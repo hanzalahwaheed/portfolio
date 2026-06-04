@@ -7,13 +7,10 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "hanzlahwaheed" },
-      { name: "description", content: "Hanzlah Waheed Portfolio" },
+      { title: "Hanzalah Waheed" },
+      { name: "description", content: "Software engineer. Portfolio, builds, and writing by Hanzalah Waheed." },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "canonical", href: "/" },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   component: Outlet,
   shellComponent: RootDocument,

@@ -5,26 +5,6 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
-import hljs from "highlight.js"
-
-hljs.configure({
-  languages: [
-    "javascript",
-    "typescript",
-    "js",
-    "ts",
-    "tsx",
-    "jsx",
-    "css",
-    "html",
-    "json",
-    "python",
-    "bash",
-    "shell",
-    "markdown",
-    "md",
-  ],
-})
 import { Copy, Check, Moon, Sun, ArrowLeft, ArrowUp, Mail, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import type { BlogPost as Post } from "@/lib/blogs"
@@ -208,9 +188,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                 isDark ? "text-neutral-400" : "text-neutral-500"
               }`}
             >
-              <span className="flex items-center gap-2.5">
-                {readTime} read
-              </span>
+              <span className="flex items-center gap-2.5">{readTime} read</span>
               {publishedDate && <time className="tabular-nums">{publishedDate}</time>}
             </div>
             <div
@@ -238,7 +216,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                 src="/images/pfp.jpeg"
                 alt="Hanzalah Waheed"
                 className={`h-14 w-14 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 ${
-                  isDark ? "ring-1 ring-turquoise/30" : "ring-1 ring-deep-teal/25"
+                  isDark ? "ring-turquoise/30 ring-1" : "ring-deep-teal/25 ring-1"
                 }`}
               />
               <span
@@ -543,7 +521,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
             <div className="flex flex-col gap-3 sm:items-end">
               <a
                 href={`mailto:${contactLinks.email}`}
-                className={`inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-sm font-medium transition-all duration-200 ${
+                className={`inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-medium transition-all duration-200 sm:w-44 ${
                   isDark
                     ? "bg-[#66acb6] text-neutral-950 hover:bg-[#7fc3cc]"
                     : "bg-[#0B5964] text-white hover:bg-[#0f6f7d]"
@@ -556,7 +534,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                 href={contactLinks.scheduleCall}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-medium transition-all duration-200 ${
+                className={`inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border px-4 text-sm font-medium transition-all duration-200 sm:w-44 ${
                   isDark
                     ? "border-neutral-800 text-neutral-300 hover:border-neutral-700 hover:bg-neutral-900 hover:text-white"
                     : "border-neutral-200 text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950"

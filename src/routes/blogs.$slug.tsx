@@ -1,20 +1,13 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { getPost } from "@/lib/blogs"
+import { toMetaDescription } from "@/lib/blog-utils"
 import { MinimalBlogContent } from "@/components/blog/minimal-blog-content"
 
 const siteUrl = "https://hanzalahwaheed.com"
-
-const createExcerpt = (content: string, fallbackLength = 160) => {
-  const plainText = content
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/`[^`]*`/g, " ")
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, " ")
-    .replace(/\[[^\]]*\]\([^)]+\)/g, " ")
-    .replace(/[#>*_~-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-  return plainText.length > fallbackLength ? `${plainText.slice(0, fallbackLength - 1)}...` : plainText
-}
+const authorName = "Hanzalah Waheed"
+const twitterHandle = "@waheed_hanzalah"
+const absoluteUrl = (path: string) =>
+  path.startsWith("http") ? path : `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`
 
 export const Route = createFileRoute("/blogs/$slug")({
   loader: async ({ params }) => {
@@ -26,21 +19,35 @@ export const Route = createFileRoute("/blogs/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {}
-    const description = loaderData.excerpt?.trim() || createExcerpt(loaderData.content)
-    const canonical = `/blogs/${loaderData.slug}`
+    const description = toMetaDescription(loaderData.excerpt?.trim() || loaderData.content)
+    const pageTitle = `${loaderData.title} | ${authorName}`
+    const canonical = absoluteUrl(`/blogs/${loaderData.slug}`)
+    const ogImage = absoluteUrl(`/blogs/${loaderData.slug}/opengraph-image`)
+    const publishedTime = loaderData.publishedAt ? new Date(loaderData.publishedAt).toISOString() : undefined
+    const modifiedTime = loaderData.updatedAt ? new Date(loaderData.updatedAt).toISOString() : undefined
     return {
       meta: [
-        { title: `${loaderData.title} | Hanzalah Waheed` },
+        { title: pageTitle },
         { name: "description", content: description },
-        { property: "og:title", content: `${loaderData.title} | Hanzalah Waheed` },
+        { name: "author", content: authorName },
+        { property: "og:title", content: pageTitle },
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `${siteUrl}${canonical}` },
-        { property: "og:image", content: `${siteUrl}/blogs/${loaderData.slug}/opengraph-image` },
+        { property: "og:url", content: canonical },
+        { property: "og:site_name", content: authorName },
+        { property: "og:locale", content: "en_US" },
+        { property: "og:image", content: ogImage },
+        { property: "og:image:alt", content: loaderData.title },
+        ...(publishedTime ? [{ property: "article:published_time", content: publishedTime }] : []),
+        ...(modifiedTime ? [{ property: "article:modified_time", content: modifiedTime }] : []),
+        { property: "article:author", content: siteUrl },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: `${loaderData.title} | Hanzalah Waheed` },
+        { name: "twitter:site", content: twitterHandle },
+        { name: "twitter:creator", content: twitterHandle },
+        { name: "twitter:title", content: pageTitle },
         { name: "twitter:description", content: description },
-        { name: "twitter:image", content: `${siteUrl}/blogs/${loaderData.slug}/twitter-image` },
+        { name: "twitter:image", content: absoluteUrl(`/blogs/${loaderData.slug}/twitter-image`) },
+        { name: "twitter:image:alt", content: loaderData.title },
       ],
       links: [{ rel: "canonical", href: canonical }],
     }
@@ -50,27 +57,32 @@ export const Route = createFileRoute("/blogs/$slug")({
 
 function BlogPostPage() {
   const post = Route.useLoaderData()
-  const description = post.excerpt?.trim() || createExcerpt(post.content)
-  const url = `${siteUrl}/blogs/${post.slug}`
+  const description = toMetaDescription(post.excerpt?.trim() || post.content)
+  const url = absoluteUrl(`/blogs/${post.slug}`)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description,
-    image: post.coverImage ? [post.coverImage] : undefined,
+    image: [absoluteUrl(post.coverImage ? post.coverImage : `/blogs/${post.slug}/opengraph-image`)],
     datePublished: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     author: {
       "@type": "Person",
-      name: "Hanzalah Waheed",
+      name: authorName,
       url: siteUrl,
+      sameAs: [
+        "https://github.com/hanzalahwaheed",
+        "https://x.com/waheed_hanzalah",
+        "https://linkedin.com/in/hanzalahwaheed",
+      ],
     },
     publisher: {
       "@type": "Person",
-      name: "Hanzalah Waheed",
+      name: authorName,
       url: siteUrl,
     },
-    mainEntityOfPage: url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
   }
 

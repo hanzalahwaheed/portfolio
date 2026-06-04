@@ -1,8 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getResumeFileId } from "@/lib/resume"
 
+const siteUrl = "https://hanzalahwaheed.com"
+
 export const Route = createFileRoute("/cv")({
   loader: () => getResumeFileId({ data: { variant: "default" } }),
+  head: () => ({
+    meta: [
+      { title: "CV | Hanzalah Waheed" },
+      { name: "description", content: "CV for Hanzalah Waheed, software developer focused on AI and web products." },
+      { name: "robots", content: "noindex, follow" },
+    ],
+    links: [{ rel: "canonical", href: `${siteUrl}/resume` }],
+  }),
   component: CvPage,
 })
 

@@ -6,6 +6,12 @@ import { deletePost, getAllPostsAdmin } from "@/lib/blogs"
 
 export const Route = createFileRoute("/admin")({
   loader: () => getAllPostsAdmin(),
+  head: () => ({
+    meta: [
+      { title: "Admin | Hanzalah Waheed" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AdminPage,
 })
 

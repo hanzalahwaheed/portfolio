@@ -19,6 +19,7 @@ import { Route as CvRouteImport } from './routes/cv'
 import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
 import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as ApiGithubLatestContributionsRouteImport } from './routes/api.github-latest-contributions'
@@ -78,6 +79,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogsRoute,
+} as any)
 const BlogsSlugRoute = BlogsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/api/github-latest-contributions': typeof ApiGithubLatestContributionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/blogs/$slug': typeof BlogsSlugRouteWithChildren
+  '/blogs/': typeof BlogsIndexRoute
   '/admin/edit/$id': typeof AdminEditIdRoute
   '/blogs/$slug/opengraph-image': typeof BlogsSlugOpengraphImageRoute
   '/blogs/$slug/twitter-image': typeof BlogsSlugTwitterImageRoute
@@ -143,7 +150,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/blogs': typeof BlogsRouteWithChildren
   '/cv': typeof CvRoute
   '/opengraph-image': typeof OpengraphImageRoute
   '/resume': typeof ResumeRoute
@@ -156,6 +162,7 @@ export interface FileRoutesByTo {
   '/api/github-latest-contributions': typeof ApiGithubLatestContributionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/blogs/$slug': typeof BlogsSlugRouteWithChildren
+  '/blogs': typeof BlogsIndexRoute
   '/admin/edit/$id': typeof AdminEditIdRoute
   '/blogs/$slug/opengraph-image': typeof BlogsSlugOpengraphImageRoute
   '/blogs/$slug/twitter-image': typeof BlogsSlugTwitterImageRoute
@@ -177,6 +184,7 @@ export interface FileRoutesById {
   '/api/github-latest-contributions': typeof ApiGithubLatestContributionsRoute
   '/api/upload': typeof ApiUploadRoute
   '/blogs/$slug': typeof BlogsSlugRouteWithChildren
+  '/blogs/': typeof BlogsIndexRoute
   '/admin/edit/$id': typeof AdminEditIdRoute
   '/blogs/$slug/opengraph-image': typeof BlogsSlugOpengraphImageRoute
   '/blogs/$slug/twitter-image': typeof BlogsSlugTwitterImageRoute
@@ -199,6 +207,7 @@ export interface FileRouteTypes {
     | '/api/github-latest-contributions'
     | '/api/upload'
     | '/blogs/$slug'
+    | '/blogs/'
     | '/admin/edit/$id'
     | '/blogs/$slug/opengraph-image'
     | '/blogs/$slug/twitter-image'
@@ -206,7 +215,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
-    | '/blogs'
     | '/cv'
     | '/opengraph-image'
     | '/resume'
@@ -219,6 +227,7 @@ export interface FileRouteTypes {
     | '/api/github-latest-contributions'
     | '/api/upload'
     | '/blogs/$slug'
+    | '/blogs'
     | '/admin/edit/$id'
     | '/blogs/$slug/opengraph-image'
     | '/blogs/$slug/twitter-image'
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/api/github-latest-contributions'
     | '/api/upload'
     | '/blogs/$slug'
+    | '/blogs/'
     | '/admin/edit/$id'
     | '/blogs/$slug/opengraph-image'
     | '/blogs/$slug/twitter-image'
@@ -332,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof BlogsRoute
+    }
     '/blogs/$slug': {
       id: '/blogs/$slug'
       path: '/$slug'
@@ -419,10 +436,12 @@ const BlogsSlugRouteWithChildren = BlogsSlugRoute._addFileChildren(
 
 interface BlogsRouteChildren {
   BlogsSlugRoute: typeof BlogsSlugRouteWithChildren
+  BlogsIndexRoute: typeof BlogsIndexRoute
 }
 
 const BlogsRouteChildren: BlogsRouteChildren = {
   BlogsSlugRoute: BlogsSlugRouteWithChildren,
+  BlogsIndexRoute: BlogsIndexRoute,
 }
 
 const BlogsRouteWithChildren = BlogsRoute._addFileChildren(BlogsRouteChildren)

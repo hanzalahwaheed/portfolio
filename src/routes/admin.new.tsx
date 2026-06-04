@@ -5,6 +5,12 @@ import { createPost } from "@/lib/blogs"
 
 export const Route = createFileRoute("/admin/new")({
   loader: () => ensureAdmin(),
+  head: () => ({
+    meta: [
+      { title: "New Post | Hanzalah Waheed" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: NewPostPage,
 })
 
