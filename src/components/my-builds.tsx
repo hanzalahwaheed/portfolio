@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { instrumentSerif } from "@/lib/fonts"
 
 interface Build {
   name: string
@@ -37,7 +38,9 @@ const builds: Build[] = [
 export const MyBuilds = () => {
   return (
     <div id="builds" className="mx-auto mt-16 w-full max-w-3xl">
-      <h2 className="text-glow mb-8 text-center text-4xl text-white">my builds</h2>
+      <h2 className={`${instrumentSerif.className} text-glow mb-8 text-center text-3xl text-white md:text-4xl`}>
+        my builds
+      </h2>
       <ul className="space-y-6">
         {builds.map((build, index) => (
           <li key={index} className="border-b border-white/10 pb-6 last:border-b-0 last:pb-0">

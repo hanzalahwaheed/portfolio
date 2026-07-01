@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useEffect, useRef, useState } from "react"
 import { instrumentSerif } from "@/lib/fonts"
 import Navbar from "@/components/navbar"
 import Lines from "@/components/lines"
@@ -54,7 +55,46 @@ export const Route = createFileRoute("/")({
 
 const currentYear = new Date().getFullYear()
 
+const heroBackgrounds = ["/images/aurora-forest.jpg", "/images/snowy-canyon.jpg"]
+
 function Home() {
+  // Pick a random hero background per page load. Done in an effect (rather than
+  // during render) so the server and initial client render agree — the black
+  // section background shows until the chosen image is set on mount.
+  const [heroBackground, setHeroBackground] = useState<string | null>(null)
+  const heroBgRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setHeroBackground(heroBackgrounds[Math.floor(Math.random() * heroBackgrounds.length)])
+  }, [])
+
+  // Slow parallax: drift the hero background at ~0.15x scroll so it lags behind
+  // the page, making the story section feel like scrolling deeper into the same
+  // scene. Capped to 15% of viewport height to stay within the oversized (130%)
+  // background layer so no edges ever show. Disabled for reduced-motion users.
+  useEffect(() => {
+    const el = heroBgRef.current
+    if (!el) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const offset = Math.min(window.scrollY * 0.15, window.innerHeight * 0.15)
+      el.style.transform = `translate3d(0, ${offset}px, 0)`
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   const siteUrl = "https://hanzalahwaheed.com"
   const personJsonLd = {
     "@context": "https://schema.org",
@@ -87,37 +127,31 @@ function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personJsonLd, websiteJsonLd]) }}
       />
       <Navbar />
-      <div className="flex h-screen w-full flex-col items-center justify-center bg-black">
-        <main className="space-y-8 text-center">
-          <div
-            className="relative h-screen w-screen bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: "url('/images/hollow_knight_bg.jpg')",
-            }}
-          >
-            <div className="absolute top-[45%] left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-transparent">
-              <h1
-                className={`${instrumentSerif.className} bg-gradient-background text-glow text-5xl text-white md:text-7xl lg:text-8xl`}
-              >
-                Hanzalah Waheed
-              </h1>
-              <br />
-              <h2 className={`${instrumentSerif.className} text-lg text-white md:text-xl`}>
-                Trying to understand how things work
-              </h2>
-              <div className="mt-8 flex items-center justify-center space-x-4">
-                <Socials />
-              </div>
-            </div>
-            <MoreBelow />
+      <section className="relative h-screen w-full overflow-hidden bg-black">
+        {/* Parallax background layer — oversized (130%) so the drift never exposes an edge */}
+        <div
+          ref={heroBgRef}
+          className="absolute -top-[15%] left-0 h-[130%] w-full bg-cover bg-center bg-no-repeat will-change-transform"
+          style={heroBackground ? { backgroundImage: `url('${heroBackground}')` } : undefined}
+        />
+        {/* Bottom fade: dissolve the image into the black story section below */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-black" />
+        <div className="absolute top-[45%] left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center">
+          <h1 className={`${instrumentSerif.className} text-glow text-5xl text-white md:text-7xl lg:text-8xl`}>
+            Hanzalah Waheed
+          </h1>
+          <br />
+          <h2 className={`${instrumentSerif.className} text-lg text-white md:text-xl`}>
+            Trying to understand how things work
+          </h2>
+          <div className="mt-8 flex items-center justify-center space-x-4">
+            <Socials />
           </div>
-        </main>
-      </div>
-      <Lines reverse={true} />
-      <div id="about-me" className="mb-0.25">
-        <div className="bg-gradient-background h-full w-full">
-          <AboutMe />
         </div>
+        <MoreBelow />
+      </section>
+      <div id="about-me" className="relative z-10 -mt-[70px]">
+        <AboutMe />
       </div>
       <Lines />
       <div id="blogs">

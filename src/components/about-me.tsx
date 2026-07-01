@@ -9,10 +9,17 @@ import { instrumentSerif } from "@/lib/fonts"
 const AboutMe = () => {
   return (
     <div className="relative flex w-full flex-col items-center justify-center overflow-x-hidden px-4 py-16">
+      {/* Faint aurora glow lingering from the hero, behind the heading.
+          Peak sits inside the box and fades to fully transparent before any
+          edge, so the layer has no visible borders (no banding). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[560px] bg-[radial-gradient(70%_55%_at_50%_36%,rgba(79,224,208,0.09),transparent_70%)]"
+      />
       {/* Content with relative z-index to appear above background */}
       <div className="relative z-10 w-full">
         <h1
-          className={`${instrumentSerif.className} text-glow mb-16 text-center text-3xl font-bold text-white md:text-4xl`}
+          className={`${instrumentSerif.className} text-glow mt-20 mb-16 text-center text-3xl font-bold text-white md:text-4xl`}
         >
           my story so far, tldr;
         </h1>

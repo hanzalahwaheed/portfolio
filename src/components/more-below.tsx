@@ -13,7 +13,7 @@ export default function MoreBelow() {
   return (
     <button
       onClick={handleClick}
-      className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 cursor-pointer transition-opacity hover:opacity-100 focus:outline-none"
+      className="absolute bottom-24 left-1/2 z-20 -translate-x-1/2 cursor-pointer transition-opacity hover:opacity-100 focus:outline-none"
       aria-label="Scroll down"
     >
       <p className={`${instrumentSerif.className} text-lg text-white opacity-80 transition-opacity hover:opacity-100`}>
