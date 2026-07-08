@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { uploadToR2 } from "@/lib/r2"
 
 const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
 const maxSize = 5 * 1024 * 1024
+
+const extByType: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/gif": "gif",
+  "image/webp": "webp",
+}
 
 export const Route = createFileRoute("/api/upload")({
   server: {
@@ -34,10 +41,27 @@ export const Route = createFileRoute("/api/upload")({
             )
           }
 
-          const timestamp = Date.now()
-          const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
-          const key = `uploads/${timestamp}-${originalName}`
-          const url = await uploadToR2(file, key)
+          // Images are committed into the repo and served as static assets from
+          // public/. This writes to the local filesystem, so it only works when the
+          // editor is run locally (vite dev) — the deployed Worker has a read-only FS.
+          const { writeFile, mkdir } = await import("node:fs/promises")
+          const path = await import("node:path")
+
+          const baseName = file.name
+            .replace(/\.[^.]+$/, "")
+            .replace(/[^a-zA-Z0-9-]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "")
+            .toLowerCase()
+          const ext = extByType[file.type] ?? "png"
+          const fileName = `${Date.now()}-${baseName || "image"}.${ext}`
+
+          const dir = path.join(process.cwd(), "public", "images", "blogs")
+          await mkdir(dir, { recursive: true })
+          await writeFile(path.join(dir, fileName), new Uint8Array(await file.arrayBuffer()))
+
+          // Public URL served by the static assets handler.
+          const url = `/images/blogs/${fileName}`
 
           return Response.json({ url })
         } catch (error) {

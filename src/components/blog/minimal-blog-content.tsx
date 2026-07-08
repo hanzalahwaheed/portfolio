@@ -338,6 +338,16 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                   <strong className={`font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{children}</strong>
                 ),
                 em: ({ children }) => <em className="italic">{children}</em>,
+                img: ({ src, alt }) => (
+                  <img
+                    src={typeof src === "string" ? src : undefined}
+                    alt={alt || ""}
+                    loading="lazy"
+                    className={`mx-auto my-10 block h-auto max-w-full rounded-lg border ${
+                      isDark ? "border-neutral-800" : "border-neutral-200"
+                    }`}
+                  />
+                ),
                 a: ({ children, href }) => (
                   <a
                     href={href}

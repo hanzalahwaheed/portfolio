@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, forwardRef } from "react"
 import type { BlogPost as Post } from "@/lib/blogs"
 import Link from "@/components/app-link"
 import { ArrowLeft, Loader2, Save, ImageIcon, Eye, X } from "lucide-react"
@@ -96,31 +96,36 @@ const Toggle = ({
 )
 
 // Custom Auto-resizing Textarea
-const AutoResizeTextarea = ({
-  value,
-  onChange,
-  minRows = 1,
-  className = "",
-  placeholder,
-  name,
-  id,
-  required,
-  defaultValue,
-}: {
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-  minRows?: number
-  className?: string
-  placeholder?: string
-  name?: string
-  id?: string
-  required?: boolean
-  defaultValue?: string
-}) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+const AutoResizeTextarea = forwardRef<
+  HTMLTextAreaElement,
+  {
+    value?: string
+    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+    onPaste?: (e: React.ClipboardEvent<HTMLTextAreaElement>) => void
+    onDrop?: (e: React.DragEvent<HTMLTextAreaElement>) => void
+    onDragOver?: (e: React.DragEvent<HTMLTextAreaElement>) => void
+    minRows?: number
+    className?: string
+    placeholder?: string
+    name?: string
+    id?: string
+    required?: boolean
+    defaultValue?: string
+  }
+>(function AutoResizeTextarea(
+  { value, onChange, onPaste, onDrop, onDragOver, minRows = 1, className = "", placeholder, name, id, required, defaultValue },
+  ref,
+) {
+  const innerRef = useRef<HTMLTextAreaElement>(null)
+
+  const setRefs = (el: HTMLTextAreaElement | null) => {
+    innerRef.current = el
+    if (typeof ref === "function") ref(el)
+    else if (ref) ref.current = el
+  }
 
   useEffect(() => {
-    const textarea = textareaRef.current
+    const textarea = innerRef.current
     if (textarea) {
       textarea.style.height = "auto"
       textarea.style.height = `${textarea.scrollHeight}px`
@@ -129,9 +134,12 @@ const AutoResizeTextarea = ({
 
   return (
     <textarea
-      ref={textareaRef}
+      ref={setRefs}
       value={value}
       onChange={onChange}
+      onPaste={onPaste}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
       rows={minRows}
       className={className}
       placeholder={placeholder}
@@ -141,7 +149,7 @@ const AutoResizeTextarea = ({
       defaultValue={defaultValue}
     />
   )
-}
+})
 
 // --- Markdown Previewer ---
 const SimpleMarkdown = ({ content }: { content: string }) => {
@@ -221,6 +229,80 @@ export function Editor({ post, action }: EditorProps) {
   const [coverImageUrl, setCoverImageUrl] = useState(post?.coverImage || "")
   const [readTime, setReadTime] = useState(post?.readTime || "")
   const [isUploading, setIsUploading] = useState(false)
+  const [isContentUploading, setIsContentUploading] = useState(false)
+  const contentRef = useRef<HTMLTextAreaElement>(null)
+
+  async function uploadImage(file: File): Promise<string> {
+    const formData = new FormData()
+    formData.append("file", file)
+    const response = await fetch("/api/upload", { method: "POST", body: formData })
+    const data = await handleApiResponse<{ url: string }>(response)
+    return data.url
+  }
+
+  function insertAtCursor(snippet: string) {
+    const textarea = contentRef.current
+    if (!textarea) {
+      setContent(prev => `${prev}${prev.endsWith("\n") || prev === "" ? "" : "\n\n"}${snippet}\n`)
+      return
+    }
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const before = content.slice(0, start)
+    const after = content.slice(end)
+    const lead = before === "" || before.endsWith("\n\n") ? "" : before.endsWith("\n") ? "\n" : "\n\n"
+    const trail = after.startsWith("\n") ? "" : "\n"
+    const insertion = `${lead}${snippet}${trail}`
+    const next = before + insertion + after
+    setContent(next)
+    requestAnimationFrame(() => {
+      const pos = (before + insertion).length
+      textarea.focus()
+      textarea.setSelectionRange(pos, pos)
+    })
+  }
+
+  async function handleContentImageUpload(file: File) {
+    if (!file.type.startsWith("image/")) return
+    setIsContentUploading(true)
+    try {
+      const url = await uploadImage(file)
+      const alt = file.name.replace(/\.[^.]+$/, "") || "image"
+      insertAtCursor(`![${alt}](${url})`)
+    } catch (error) {
+      console.error("Upload error:", error)
+      alert(error instanceof Error ? error.message : "Upload failed")
+    } finally {
+      setIsContentUploading(false)
+    }
+  }
+
+  function handleContentPaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const items = event.clipboardData?.items
+    if (!items) return
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        const file = item.getAsFile()
+        if (file) {
+          event.preventDefault()
+          void handleContentImageUpload(file)
+          break
+        }
+      }
+    }
+  }
+
+  function handleContentDrop(event: React.DragEvent<HTMLTextAreaElement>) {
+    const file = event.dataTransfer?.files?.[0]
+    if (file && file.type.startsWith("image/")) {
+      event.preventDefault()
+      void handleContentImageUpload(file)
+    }
+  }
+
+  function handleContentDragOver(event: React.DragEvent<HTMLTextAreaElement>) {
+    if (event.dataTransfer?.types?.includes("Files")) event.preventDefault()
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -432,16 +514,46 @@ export function Editor({ post, action }: EditorProps) {
 
               {/* Markdown Editor */}
               <div className="pt-8">
-                <MinimalLabel className="mb-4">Content</MinimalLabel>
+                <div className="mb-4 flex items-center justify-between">
+                  <MinimalLabel className="!mb-0">Content</MinimalLabel>
+                  <label className="group flex cursor-pointer items-center gap-1.5 rounded-sm border border-neutral-800 px-2.5 py-1 text-neutral-500 transition-colors hover:border-neutral-700 hover:bg-neutral-900/30 hover:text-neutral-300">
+                    {isContentUploading ? (
+                      <Loader2 size={12} className="animate-spin" />
+                    ) : (
+                      <ImageIcon size={12} className="opacity-60 transition-opacity group-hover:opacity-100" />
+                    )}
+                    <span className="text-[10px] tracking-widest uppercase">
+                      {isContentUploading ? "Uploading..." : "Insert Image"}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                      className="hidden"
+                      disabled={isContentUploading}
+                      onChange={e => {
+                        const file = e.target.files?.[0]
+                        if (file) void handleContentImageUpload(file)
+                        e.target.value = ""
+                      }}
+                    />
+                  </label>
+                </div>
                 <AutoResizeTextarea
+                  ref={contentRef}
                   name="content"
                   value={content}
                   onChange={e => setContent(e.target.value)}
+                  onPaste={handleContentPaste}
+                  onDrop={handleContentDrop}
+                  onDragOver={handleContentDragOver}
                   minRows={15}
                   className="w-full resize-none bg-transparent font-mono text-lg leading-relaxed text-neutral-300 placeholder:text-neutral-800 focus:outline-none"
                   placeholder="Write your story here..."
                   required
                 />
+                <p className="mt-3 font-mono text-[10px] tracking-wide text-neutral-700">
+                  Paste a screenshot or drop an image to upload — it’s saved to /public and inserted at your cursor.
+                </p>
               </div>
             </div>
           </div>
