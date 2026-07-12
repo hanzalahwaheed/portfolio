@@ -95,10 +95,14 @@ const Bookery = () => {
             </h3>
             <p className="mt-1 text-sm tracking-wide text-neutral-400">{activeBook.author}</p>
 
-            <div className="mt-5 border-l-2 border-[#1E383C] pl-4">
-              <Quote size={16} className="mb-2 text-[#66acb6]" />
-              <p className="font-serif text-base leading-relaxed text-neutral-200 italic">&ldquo;{activeBook.quote}&rdquo;</p>
-            </div>
+            {activeBook.quote && (
+              <div className="mt-5 border-l-2 border-[#1E383C] pl-4">
+                <Quote size={16} className="mb-2 text-[#66acb6]" />
+                <p className="font-serif text-base leading-relaxed text-neutral-200 italic">
+                  &ldquo;{activeBook.quote}&rdquo;
+                </p>
+              </div>
+            )}
 
             <div className="mt-6 flex items-center justify-between">
               <div className="flex gap-1">

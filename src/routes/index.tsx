@@ -10,9 +10,11 @@ import Blogs from "@/components/blogs"
 import Bookery from "@/components/bookery"
 import Grind from "@/components/grind"
 import Link from "@/components/app-link"
+import { getPosts } from "@/lib/blogs"
 import { socialLinks } from "@/config"
 
 export const Route = createFileRoute("/")({
+  loader: () => getPosts(),
   head: () => ({
     meta: [
       { title: "Hanzalah Waheed | Software Developer" },
@@ -53,11 +55,16 @@ export const Route = createFileRoute("/")({
   component: Home,
 })
 
-const currentYear = new Date().getFullYear()
-
 const heroBackgrounds = ["/images/aurora-forest.jpg", "/images/snowy-canyon.jpg"]
 
 function Home() {
+  const posts = Route.useLoaderData()
+
+  // Read the clock per-render, not at module scope: Workers evaluate top-level
+  // module code during isolate startup, where the clock is pinned to the epoch
+  // and getFullYear() returns 1970.
+  const currentYear = new Date().getFullYear()
+
   // Pick a random hero background per page load. Done in an effect (rather than
   // during render) so the server and initial client render agree — the black
   // section background shows until the chosen image is set on mount.
@@ -155,7 +162,7 @@ function Home() {
       </div>
       <Lines />
       <div id="blogs">
-        <Blogs />
+        <Blogs posts={posts} />
       </div>
       <Lines />
       <div id="bookery">

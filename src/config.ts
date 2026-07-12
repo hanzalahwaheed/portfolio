@@ -86,10 +86,10 @@ export const workExperiences: WorkExperience[] = [
     company: "StockInsights AI",
     companyUrl: "https://www.stockinsights.ai",
     role: "Software Development Engineer",
-    duration: "18 Months and Ongoing",
+    duration: "Aug 2024 – Present",
     description:
-      "I've been building financial intelligence tools that help investors make better decisions. Working on everything from data pipelines to user interfaces.",
-    techStack: ["Python", "TypeScript", "Next.js", "PostgreSQL", "AWS", "Docker"],
+      "I build the AI layer of an equity research platform: a RAG pipeline that auto-summarizes 25,000+ SEC and earnings filings a month, a multi-session AI chat system, and the frontend on top of both. Along the way I've migrated our full-text search off MongoDB Atlas, cut our Vercel bill ~80% by tracking down scraper traffic, and shipped the company's first recurring API revenue with Stripe metered billing.",
+    techStack: ["Python", "TypeScript", "Next.js", "PostgreSQL", "pgvector", "AWS", "Docker"],
   },
 ]
 
@@ -99,40 +99,44 @@ export interface Build {
   url: string
   techStack: string[]
   githubUrl?: string
+  /** Older work, kept for history. Rendered in a collapsed archive, not the main list. */
+  archived?: boolean
 }
 
 export const builds: Build[] = [
   {
     name: "A/B Image Generator",
     description:
-      "An application that helps you club together multiple images and then generate an A/B image for you, that you can post anywhere to A/B test your ideas. This project was launched on Peerlist and managed to reach top 30 on the leaderboard, is fully opensourced and has 25+ stars on GitHub!",
+      "An application that helps you club together multiple images and then generate an A/B image for you, that you can post anywhere to A/B test your ideas. Launched on Peerlist, where it reached the top 30 on the leaderboard, and fully open-sourced.",
     url: "https://ab-img-gen.vercel.app/",
-    techStack: ["Nextjs", "Tailwind CSS", "TypeScript"],
+    techStack: ["Next.js", "Tailwind CSS", "TypeScript"],
     githubUrl: "https://github.com/hanzalahwaheed/ab-image-generator",
   },
   {
     name: "Product Owl",
     description:
-      "A web app that helps you track your favourite Amazon products at notifies you when they are at their cheapest! Implemented with the help of Web Scraping!",
+      "A web app that tracks your favourite Amazon products and notifies you when they hit their lowest price, using scheduled web scraping.",
     url: "https://product-owl.vercel.app/",
-    techStack: ["Nextjs", "Tailwind CSS", "TypeScript", "PostgreSQL", "Web Scraping"],
+    techStack: ["Next.js", "Tailwind CSS", "TypeScript", "PostgreSQL", "Web Scraping"],
     githubUrl: "https://github.com/hanzalahwaheed/product-owl",
   },
   {
     name: "Imagine Text",
     description:
-      "An image to text extractor using tesseractJS. Extremely slow by current standards. Would not recommend for production use anymore :/",
+      "An image-to-text extractor built on Tesseract.js, running OCR client-side with Cloudinary handling uploads.",
     url: "https://imagine-text.vercel.app/",
-    techStack: ["NextJS", "Tailwind CSS", "TypeScript", "TesseractJS", "Cloudinary"],
+    techStack: ["Next.js", "Tailwind CSS", "TypeScript", "TesseractJS", "Cloudinary"],
     githubUrl: "https://github.com/hanzalahwaheed/imagine-text",
+    archived: true,
   },
   {
     name: "News Nation",
     description:
-      "News Nation is a Platform that shows you India's top headlines and keeps you up to date with the Current Affairs. PS. This was one of my first projects that I built back in 2020!",
+      "A headlines aggregator for India's top current affairs stories, and one of the first things I ever built, back in 2020.",
     url: "https://news-nation-eta.vercel.app/",
     techStack: ["HTML", "CSS", "JavaScript"],
     githubUrl: "https://github.com/hanzalahwaheed/news-nation",
+    archived: true,
   },
 ]
 
@@ -158,7 +162,7 @@ export const books: Book[] = [
     author: "Martin Kleppmann",
     cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=2574&auto=format&fit=crop",
     color: "from-indigo-900/40 to-black",
-    quote: "The best architectures, requirements, and designs emerge from self-organizing teams.",
+    quote: "",
     rating: 4.8,
     link: "#",
   },

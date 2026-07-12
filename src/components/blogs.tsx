@@ -1,10 +1,9 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Image from "@/components/app-image"
 import Link from "@/components/app-link"
 import { ArrowUpRight, ChevronRight } from "lucide-react"
-import { getPosts } from "@/lib/blogs"
 import type { BlogPost as Post } from "@/lib/blogs"
 import { format } from "date-fns"
 import { instrumentSerif } from "@/lib/fonts"
@@ -93,26 +92,9 @@ const BlogRow = ({ article }: { article: Article }) => {
   )
 }
 
-const Blogs = () => {
-  const [articles, setArticles] = useState<Article[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const posts = await getPosts()
-        setArticles(mapPostsToArticles(posts))
-      } catch (error) {
-        console.error("Failed to fetch posts:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchPosts()
-  }, [])
-
-  const displayArticles = articles.slice(0, 6)
+const Blogs = ({ posts }: { posts: Post[] }) => {
+  const articles = mapPostsToArticles(posts)
+  const displayArticles = articles.slice(0, 5)
 
   return (
     <section className="w-full bg-[#050505] px-4 py-24 font-sans text-white selection:bg-white selection:text-black">
@@ -140,11 +122,7 @@ const Blogs = () => {
         </header>
 
         {/* The List */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <p className="text-neutral-500">Loading posts...</p>
-          </div>
-        ) : articles.length === 0 ? (
+        {articles.length === 0 ? (
           <div className="flex items-center justify-center py-20">
             <p className="text-neutral-500">No posts available yet.</p>
           </div>

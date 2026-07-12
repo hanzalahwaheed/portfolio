@@ -49,6 +49,7 @@
 html {
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
