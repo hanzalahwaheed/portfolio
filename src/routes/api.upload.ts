@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { allowedImageTypes, allowedImageTypesLabel } from "@/lib/image-types"
 
-const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
 const maxSize = 5 * 1024 * 1024
 
 const extByType: Record<string, string> = {
@@ -28,8 +28,18 @@ export const Route = createFileRoute("/api/upload")({
             return Response.json({ error: "No file provided" }, { status: 400 })
           }
 
-          if (!allowedTypes.includes(file.type)) {
-            return Response.json({ error: "Invalid file type. Allowed: jpg, jpeg, png, gif, webp" }, { status: 400 })
+          if (!allowedImageTypes.includes(file.type)) {
+            return Response.json(
+              { error: `Invalid file type${file.type ? ` (${file.type})` : ""}. Allowed: ${allowedImageTypesLabel}` },
+              { status: 400 },
+            )
+          }
+
+          if (file.size === 0) {
+            return Response.json(
+              { error: `"${file.name}" is empty (0 bytes) — re-export or re-download it and try again` },
+              { status: 400 },
+            )
           }
 
           if (file.size > maxSize) {

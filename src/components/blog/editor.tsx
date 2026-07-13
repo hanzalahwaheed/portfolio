@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useRef, useEffect, forwardRef } from "react"
+import { isRedirect, useRouter } from "@tanstack/react-router"
 import type { BlogPost as Post } from "@/lib/blogs"
 import Link from "@/components/app-link"
 import { ArrowLeft, Loader2, Save, ImageIcon, Eye, X } from "lucide-react"
 import { handleApiResponse } from "@/lib/api-client"
+import { allowedImageTypes, allowedImageTypesLabel, allowedImageAccept } from "@/lib/image-types"
 
 // --- Minimalist UI Components ---
 
@@ -220,7 +222,9 @@ interface EditorProps {
 }
 
 export function Editor({ post, action }: EditorProps) {
+  const router = useRouter()
   const [isPending, setIsPending] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [content, setContent] = useState(post?.content || "")
   const [title, setTitle] = useState(post?.title || "")
   const [slug, setSlug] = useState(post?.slug || "")
@@ -263,7 +267,14 @@ export function Editor({ post, action }: EditorProps) {
   }
 
   async function handleContentImageUpload(file: File) {
-    if (!file.type.startsWith("image/")) return
+    if (!allowedImageTypes.includes(file.type)) {
+      alert(`Unsupported image type${file.type ? ` (${file.type})` : ""}. Allowed: ${allowedImageTypesLabel}`)
+      return
+    }
+    if (file.size === 0) {
+      alert(`"${file.name}" is empty (0 bytes) — the export or download that produced it likely failed.`)
+      return
+    }
     setIsContentUploading(true)
     try {
       const url = await uploadImage(file)
@@ -307,11 +318,19 @@ export function Editor({ post, action }: EditorProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsPending(true)
+    setSaveError(null)
     const formData = new FormData(event.currentTarget)
     try {
       await action(formData)
     } catch (error) {
+      // Server functions signal success with a thrown redirect — follow it
+      // instead of treating it as a failure.
+      if (isRedirect(error)) {
+        await router.navigate(error.options)
+        return
+      }
       console.error(error)
+      setSaveError(error instanceof Error ? error.message : "Failed to save post")
       setIsPending(false)
     }
   }
@@ -346,6 +365,20 @@ export function Editor({ post, action }: EditorProps) {
           </MinimalButton>
         </div>
       </nav>
+
+      {saveError && (
+        <div className="fixed top-14 right-0 left-0 z-40 flex items-center justify-between gap-4 border-b border-red-900/60 bg-red-950/90 px-6 py-2 backdrop-blur-md">
+          <p className="font-mono text-xs break-all text-red-300">{saveError}</p>
+          <button
+            type="button"
+            onClick={() => setSaveError(null)}
+            className="text-red-400 transition-colors hover:text-red-200"
+            aria-label="Dismiss error"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       <form id="editor-form" onSubmit={handleSubmit}>
         {/* Hidden input for published state */}
@@ -438,7 +471,7 @@ export function Editor({ post, action }: EditorProps) {
                       </span>
                       <input
                         type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                        accept={allowedImageAccept}
                         className="hidden"
                         disabled={isUploading}
                         onChange={async e => {
@@ -480,7 +513,7 @@ export function Editor({ post, action }: EditorProps) {
                     </span>
                     <input
                       type="file"
-                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                      accept={allowedImageAccept}
                       className="hidden"
                       disabled={isUploading}
                       onChange={async e => {
@@ -527,7 +560,7 @@ export function Editor({ post, action }: EditorProps) {
                     </span>
                     <input
                       type="file"
-                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                      accept={allowedImageAccept}
                       className="hidden"
                       disabled={isContentUploading}
                       onChange={e => {

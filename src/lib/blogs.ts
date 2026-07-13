@@ -99,6 +99,11 @@ export const createPost = createServerFn({ method: "POST" })
     requireAdminForMutation()
     const values = readPostFormData(data)
 
+    const slugConflict = await db.select({ id: posts.id }).from(posts).where(eq(posts.slug, values.slug)).limit(1)
+    if (slugConflict[0]) {
+      throw new Error(`A post with slug "${values.slug}" already exists — it may have been saved already.`)
+    }
+
     await db.insert(posts).values({
       id: uuidv7(),
       ...values,
@@ -118,6 +123,11 @@ export const updatePost = createServerFn({ method: "POST" })
     const id = data.get("id") as string
     const values = readPostFormData(data)
     const existingPost = await db.select().from(posts).where(eq(posts.id, id)).limit(1)
+
+    const slugConflict = await db.select({ id: posts.id }).from(posts).where(eq(posts.slug, values.slug)).limit(1)
+    if (slugConflict[0] && slugConflict[0].id !== id) {
+      throw new Error(`A post with slug "${values.slug}" already exists.`)
+    }
 
     await db
       .update(posts)
