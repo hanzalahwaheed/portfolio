@@ -92,7 +92,7 @@ const BlogRow = ({ article }: { article: Article }) => {
   )
 }
 
-const Blogs = ({ posts }: { posts: Post[] }) => {
+const Blogs = ({ posts, error = false }: { posts: Post[]; error?: boolean }) => {
   const articles = mapPostsToArticles(posts)
   const displayArticles = articles.slice(0, 5)
 
@@ -122,7 +122,11 @@ const Blogs = ({ posts }: { posts: Post[] }) => {
         </header>
 
         {/* The List */}
-        {articles.length === 0 ? (
+        {error ? (
+          <div className="flex items-center justify-center border-y border-white/10 py-20">
+            <p className="text-neutral-500">Couldn&apos;t load posts right now — try again in a bit.</p>
+          </div>
+        ) : articles.length === 0 ? (
           <div className="flex items-center justify-center py-20">
             <p className="text-neutral-500">No posts available yet.</p>
           </div>

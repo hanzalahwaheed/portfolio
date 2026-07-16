@@ -63,6 +63,19 @@ export const getPosts = createServerFn({ method: "GET" }).handler(async () => {
   return serializedPosts
 })
 
+export type PostsResult = { posts: BlogPost[]; error: false } | { posts: null; error: true }
+
+// Loader-safe wrapper: a DB outage should degrade the blogs section, not take
+// down the whole page that embeds it.
+export async function loadPosts(): Promise<PostsResult> {
+  try {
+    return { posts: await getPosts(), error: false }
+  } catch (error) {
+    console.error("Failed to load blog posts", error)
+    return { posts: null, error: true }
+  }
+}
+
 export const getPost = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }) => {

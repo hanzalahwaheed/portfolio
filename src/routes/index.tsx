@@ -10,11 +10,11 @@ import Blogs from "@/components/blogs"
 import Bookery from "@/components/bookery"
 import Grind from "@/components/grind"
 import Link from "@/components/app-link"
-import { getPosts } from "@/lib/blogs"
+import { loadPosts } from "@/lib/blogs"
 import { socialLinks } from "@/config"
 
 export const Route = createFileRoute("/")({
-  loader: () => getPosts(),
+  loader: () => loadPosts(),
   head: () => ({
     meta: [
       { title: "Hanzalah Waheed | Software Developer" },
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/")({
 const heroBackgrounds = ["/images/aurora-forest.jpg", "/images/snowy-canyon.jpg"]
 
 function Home() {
-  const posts = Route.useLoaderData()
+  const { posts, error: postsError } = Route.useLoaderData()
 
   // Read the clock per-render, not at module scope: Workers evaluate top-level
   // module code during isolate startup, where the clock is pinned to the epoch
@@ -162,7 +162,7 @@ function Home() {
       </div>
       <Lines />
       <div id="blogs">
-        <Blogs posts={posts} />
+        <Blogs posts={posts ?? []} error={postsError} />
       </div>
       <Lines />
       <div id="bookery">

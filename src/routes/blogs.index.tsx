@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import Image from "@/components/app-image"
-import { getPosts } from "@/lib/blogs"
+import { loadPosts } from "@/lib/blogs"
 import { BlogCard } from "@/components/blog/blog-card"
 import { instrumentSerif } from "@/lib/fonts"
 
@@ -9,7 +9,7 @@ const blogsDescription =
   "Writing on software engineering, React performance, databases, and building products by Hanzalah Waheed."
 
 export const Route = createFileRoute("/blogs/")({
-  loader: () => getPosts(),
+  loader: () => loadPosts(),
   head: () => ({
     meta: [
       { title: "Writing | Hanzalah Waheed" },
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/blogs/")({
 })
 
 function BlogIndexPage() {
-  const posts = Route.useLoaderData()
+  const { posts, error } = Route.useLoaderData()
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -40,7 +40,7 @@ function BlogIndexPage() {
     description: blogsDescription,
     url: `${siteUrl}/blogs`,
     author: { "@type": "Person", name: "Hanzalah Waheed", url: siteUrl },
-    blogPost: posts.map(post => ({
+    blogPost: (posts ?? []).map(post => ({
       "@type": "BlogPosting",
       headline: post.title,
       url: `${siteUrl}/blogs/${post.slug}`,
@@ -67,7 +67,11 @@ function BlogIndexPage() {
           </p>
         </header>
 
-        {posts.length === 0 ? (
+        {error ? (
+          <p className="text-olive-grey py-16 text-center font-mono text-sm tracking-widest uppercase">
+            Couldn&apos;t load posts right now — try again in a bit
+          </p>
+        ) : posts.length === 0 ? (
           <p className="text-olive-grey py-16 text-center font-mono text-sm tracking-widest uppercase">No posts yet</p>
         ) : (
           <div className="flex flex-col">
