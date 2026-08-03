@@ -55,7 +55,11 @@ export const Route = createFileRoute("/")({
   component: Home,
 })
 
-const heroBackgrounds = ["/images/aurora-forest.jpg", "/images/snowy-canyon.jpg"]
+const heroBackgrounds = [
+  "/images/aurora-forest.jpg",
+  "/images/image copy 2.png",
+  "/images/image copy 4.png",
+]
 
 function Home() {
   const { posts, error: postsError } = Route.useLoaderData()
