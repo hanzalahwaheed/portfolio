@@ -1,10 +1,11 @@
 "use client"
 import React, { useState, useEffect } from "react"
 
-import { Star, ArrowRight, Quote } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 import { books as library, bookCategories as categories, Book } from "../config"
 import { instrumentSerif } from "@/lib/fonts"
+import Reveal from "@/components/reveal"
 
 const Bookery = () => {
   const [activeBook, setActiveBook] = useState<Book>(library[0])
@@ -32,33 +33,33 @@ const Bookery = () => {
   }, [selectedCategory, filteredLibrary, activeBook.id])
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#061113] px-4 py-24 font-sans text-white selection:bg-white/20 selection:text-white">
+    <section className="relative w-full overflow-hidden bg-ink px-4 py-24 text-paper">
       {/* --- Ambient mood lighting based on the active book cover --- */}
       <div
-        className={`pointer-events-none absolute inset-0 z-0 bg-gradient-to-br ${activeBook.color} via-[#061113] to-[#0D1B21] opacity-40 transition-colors duration-1000 ease-in-out`}
+        className={`pointer-events-none absolute inset-0 z-0 bg-gradient-to-br ${activeBook.color} via-ink to-ink-raised opacity-30 transition-colors duration-1000 ease-in-out`}
       />
 
       <div className="relative z-10 mx-auto w-full max-w-3xl">
         {/* Header */}
-        <header className="mb-8">
-          <h2
-            className={`bg-gradient-to-b from-white to-white/60 bg-clip-text ${instrumentSerif.className} pb-1 text-4xl tracking-tight text-transparent drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] md:text-5xl`}
-          >
-            Bookery
-          </h2>
-          <p className="mt-3 max-w-md text-sm text-neutral-400">I love reading. Here are some of my favorite books.</p>
-        </header>
+        <Reveal>
+          <header className="mb-8">
+            <h2 className={`${instrumentSerif.className} text-4xl leading-none text-paper md:text-5xl`}>Bookery</h2>
+            <p className="mt-4 max-w-md font-light text-paper-dim">
+              I love reading. Here are some of my favorite books.
+            </p>
+          </header>
+        </Reveal>
 
         {/* Category Filter */}
-        <div className="mb-10 flex flex-wrap gap-2">
+        <div className="font-ui mb-10 flex flex-wrap gap-x-5 gap-y-2">
           {categories.map(category => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`rounded-full border px-3.5 py-1 text-[0.7rem] font-medium tracking-wider uppercase transition-all duration-300 ${
+              className={`border-b pb-1 text-[0.7rem] tracking-[0.2em] uppercase transition-all duration-300 ${
                 selectedCategory === category
-                  ? "border-[#66acb6] bg-[#66acb6]/20 text-[#66acb6]"
-                  : "border-[#1E383C] bg-transparent text-neutral-500 hover:border-[#66acb6]/50 hover:text-neutral-300"
+                  ? "border-brass text-brass"
+                  : "border-transparent text-faint hover:text-paper"
               }`}
             >
               {category}
@@ -68,55 +69,49 @@ const Bookery = () => {
 
         {/* Featured spread */}
         <div
-          className={`flex flex-col gap-8 transition-all duration-300 ease-out sm:flex-row sm:items-center sm:gap-10 ${
+          className={`flex flex-col gap-8 transition-all duration-300 ease-out sm:flex-row sm:items-center sm:gap-12 ${
             isTransitioning ? "translate-y-3 opacity-0" : "translate-y-0 opacity-100"
           }`}
         >
           {/* Cover */}
           <div className="flex flex-shrink-0 justify-center sm:block">
-            <div className="animate-float group relative aspect-[2/3] w-44 rounded-sm shadow-2xl md:w-52">
+            <div className="animate-float group relative aspect-[2/3] w-44 shadow-2xl md:w-52">
               <img
                 src={activeBook.cover}
                 alt={activeBook.title}
-                className="h-full w-full rounded-sm border border-white/10 object-cover shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)]"
+                className="h-full w-full object-cover shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7)]"
               />
               {/* Glossy reflection */}
-              <div className="pointer-events-none absolute inset-0 rounded-sm bg-gradient-to-tr from-white/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               {/* Spine hint */}
-              <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-white/20 to-transparent" />
+              <div className="absolute top-0 bottom-0 left-0 w-1 bg-gradient-to-r from-black/40 to-transparent" />
             </div>
           </div>
 
           {/* Details */}
           <div className="min-w-0 flex-1">
-            <span className="text-[0.7rem] tracking-[0.2em] text-[#66acb6] uppercase">{activeBook.category}</span>
-            <h3 className={`${instrumentSerif.className} mt-2 text-3xl leading-tight text-white md:text-4xl`}>
+            <span className="font-ui text-[0.65rem] tracking-[0.3em] text-brass uppercase">{activeBook.category}</span>
+            <h3 className={`${instrumentSerif.className} mt-2 text-3xl leading-tight text-paper md:text-4xl`}>
               {activeBook.title}
             </h3>
-            <p className="mt-1 text-sm tracking-wide text-neutral-400">{activeBook.author}</p>
+            <p className="mt-1 font-light tracking-wide text-paper-dim italic">{activeBook.author}</p>
 
             {activeBook.quote && (
-              <div className="mt-5 border-l-2 border-[#1E383C] pl-4">
-                <Quote size={16} className="mb-2 text-[#66acb6]" />
-                <p className="font-serif text-base leading-relaxed text-neutral-200 italic">
+              <div className="mt-6 border-l border-brass/50 pl-5">
+                <p className="text-lg leading-relaxed font-light text-paper-dim italic">
                   &ldquo;{activeBook.quote}&rdquo;
                 </p>
               </div>
             )}
 
             <div className="mt-6 flex items-center justify-between">
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={13}
-                    className={i < Math.floor(activeBook.rating) ? "fill-[#66acb6] text-[#66acb6]" : "text-[#1E383C]"}
-                  />
-                ))}
+              <div className="flex items-center gap-2">
+                <span className={`${instrumentSerif.className} text-lg text-brass`}>{Math.floor(activeBook.rating)}</span>
+                <span className="font-ui text-[0.65rem] tracking-[0.2em] text-faint uppercase">/ 5</span>
               </div>
               <a
                 href={activeBook.link}
-                className="flex items-center gap-2 text-xs font-bold tracking-widest text-[#66acb6] uppercase transition-colors hover:text-[#4fe0d0]"
+                className="font-ui flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.25em] text-brass uppercase transition-colors hover:text-paper"
               >
                 Details <ArrowRight size={12} />
               </a>
@@ -125,16 +120,16 @@ const Bookery = () => {
         </div>
 
         {/* Cover strip selector */}
-        <div className="scrollbar-hide mt-12 flex gap-3 overflow-x-auto border-t border-[#1E383C]/50 pt-8">
+        <div className="scrollbar-hide mt-12 flex gap-3 overflow-x-auto border-t border-hairline pt-8">
           {filteredLibrary.map(book => (
             <button
               key={book.id}
               onClick={() => handleBookChange(book)}
               aria-label={book.title}
-              className={`relative aspect-[2/3] w-12 flex-shrink-0 overflow-hidden rounded-sm border transition-all duration-300 md:w-14 ${
+              className={`relative aspect-[2/3] w-12 flex-shrink-0 overflow-hidden border transition-all duration-300 md:w-14 ${
                 activeBook.id === book.id
-                  ? "border-[#66acb6] opacity-100 ring-2 ring-[#66acb6]/40"
-                  : "border-white/10 opacity-50 hover:opacity-90"
+                  ? "border-brass opacity-100"
+                  : "border-hairline opacity-40 hover:opacity-90"
               }`}
             >
               <img src={book.cover} alt="" className="h-full w-full object-cover" />

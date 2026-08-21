@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital,wght@0,400;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..600&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -17,11 +17,20 @@
 }
 
 :root {
+  --ink: #0b0a08;
+  --ink-raised: #14120e;
+  --cream: #ede6d6;
+  --cream-dim: #a89f8c;
+  --faint: #635c4d;
+  --brass: #c9a870;
+  --accent-tint: rgba(201, 168, 112, 0.08);
+  --hairline: rgba(237, 230, 214, 0.12);
   --background: #ffffff;
   --foreground: #171717;
   --background-custom: #f5f5f5;
   --foreground-custom: #333333;
   --font-google-sans: "Google Sans", sans-serif;
+  --font-newsreader: "Newsreader", Georgia, serif;
 }
 
 @theme inline {
@@ -34,7 +43,15 @@
   --color-turquoise: #4fe0d0;
   --color-deep-teal: #0b5964;
   --color-cream: #f2edc5;
-  --font-sans: var(--font-google-sans);
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-paper: var(--cream);
+  --color-paper-dim: var(--cream-dim);
+  --color-faint: var(--faint);
+  --color-brass: var(--brass);
+  --color-hairline: var(--hairline);
+  --font-sans: var(--font-newsreader);
+  --font-ui: "Instrument Sans", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -60,12 +77,29 @@ body::-webkit-scrollbar {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ink);
+  color: var(--cream);
   overflow-x: hidden;
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Film grain over the whole page. Fixed layer, no pointer events. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brass) 35%, transparent);
+  color: var(--cream);
 }
 
 .text-glow {
@@ -78,6 +112,14 @@ body {
 
 .font-instrument-serif {
   font-family: "Instrument Serif", serif;
+}
+
+.font-newsreader {
+  font-family: "Newsreader", Georgia, serif;
+}
+
+.font-ui {
+  font-family: "Instrument Sans", sans-serif;
 }
 
 .grid-cols-53 {
@@ -112,30 +154,57 @@ body {
   animation: scroll-right 40s linear infinite;
 }
 
+/* Scroll reveal. The Reveal component adds .is-visible when in view. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-scroll-left,
+  .animate-scroll-right {
+    animation-play-state: paused;
+  }
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(237, 230, 214, 0.05);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(102, 172, 182, 0.4);
+  background: color-mix(in srgb, var(--brass) 35%, transparent);
   border-radius: 3px;
   transition: background 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 224, 208, 0.6);
-  box-shadow: 0 0 8px rgba(79, 224, 208, 0.4);
+  background: color-mix(in srgb, var(--brass) 60%, transparent);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(102, 172, 182, 0.4) rgba(255, 255, 255, 0.05);
+  scrollbar-color: color-mix(in srgb, var(--brass) 35%, transparent) rgba(237, 230, 214, 0.05);
 }
 
 .markdown-content .inline-code {

@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useEffect, useRef, useState } from "react"
 import { instrumentSerif } from "@/lib/fonts"
 import Navbar from "@/components/navbar"
-import Lines from "@/components/lines"
 import AboutMe from "@/components/about-me"
 import Socials from "@/components/socials"
 import MoreBelow from "@/components/more-below"
@@ -11,6 +10,7 @@ import Bookery from "@/components/bookery"
 import Grind from "@/components/grind"
 import Link from "@/components/app-link"
 import { loadPosts } from "@/lib/blogs"
+import { applyHeroTheme, extractHeroTheme, heroThemes, type HeroTheme } from "@/lib/hero-themes"
 import { socialLinks } from "@/config"
 
 export const Route = createFileRoute("/")({
@@ -69,14 +69,35 @@ function Home() {
   // and getFullYear() returns 1970.
   const currentYear = new Date().getFullYear()
 
-  // Pick a random hero background per page load. Done in an effect (rather than
-  // during render) so the server and initial client render agree — the black
-  // section background shows until the chosen image is set on mount.
-  const [heroBackground, setHeroBackground] = useState<string | null>(null)
+  // Rotate through the hero backgrounds in a fixed order. All layers render
+  // stacked; the active one fades in. Done in effects (rather than during
+  // render) so the server and initial client render agree.
+  const [heroIndex, setHeroIndex] = useState(0)
+  const [extractedThemes, setExtractedThemes] = useState<Record<string, HeroTheme>>({})
   const heroBgRef = useRef<HTMLDivElement>(null)
 
+  // Extract a palette from each background once, so switching themes is instant.
   useEffect(() => {
-    setHeroBackground(heroBackgrounds[Math.floor(Math.random() * heroBackgrounds.length)])
+    let cancelled = false
+    heroBackgrounds.forEach(async src => {
+      const theme = await extractHeroTheme(src)
+      if (theme && !cancelled) setExtractedThemes(prev => ({ ...prev, [src]: theme }))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Theme the page to match the active background. Falls back to the
+  // pre-extracted palette until runtime extraction finishes.
+  useEffect(() => {
+    const src = heroBackgrounds[heroIndex]
+    applyHeroTheme(extractedThemes[src] ?? heroThemes[src])
+  }, [heroIndex, extractedThemes])
+
+  useEffect(() => {
+    const id = setInterval(() => setHeroIndex(index => (index + 1) % heroBackgrounds.length), 10000)
+    return () => clearInterval(id)
   }, [])
 
   // Slow parallax: drift the hero background at ~0.15x scroll so it lags behind
@@ -139,14 +160,21 @@ function Home() {
       />
       <Navbar />
       <section className="relative h-screen w-full overflow-hidden bg-black">
-        {/* Parallax background layer — oversized (130%) so the drift never exposes an edge */}
-        <div
-          ref={heroBgRef}
-          className="absolute -top-[15%] left-0 h-[130%] w-full bg-cover bg-center bg-no-repeat will-change-transform"
-          style={heroBackground ? { backgroundImage: `url('${heroBackground}')` } : undefined}
-        />
-        {/* Bottom fade: dissolve the image into the black story section below */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-black" />
+        {/* Parallax background layer — oversized (130%) so the drift never exposes an edge.
+            All backgrounds render stacked; the active one fades in. */}
+        <div ref={heroBgRef} className="absolute -top-[15%] left-0 h-[130%] w-full will-change-transform">
+          {heroBackgrounds.map((src, index) => (
+            <div
+              key={src}
+              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+                index === heroIndex ? "opacity-100" : "opacity-0"
+              }`}
+              style={{ backgroundImage: `url('${src}')` }}
+            />
+          ))}
+        </div>
+        {/* Bottom fade: dissolve the image into the ink story section below */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-ink" />
         <div className="absolute top-[45%] left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center">
           <h1 className={`${instrumentSerif.className} text-glow text-5xl text-white md:text-7xl lg:text-8xl`}>
             Hanzalah Waheed
@@ -164,27 +192,26 @@ function Home() {
       <div id="about-me" className="relative z-10 -mt-[70px]">
         <AboutMe />
       </div>
-      <Lines />
       <div id="blogs">
         <Blogs posts={posts ?? []} error={postsError} />
       </div>
-      <Lines />
       <div id="bookery">
         <Bookery />
       </div>
-      <Lines />
       <Grind />
-      <Lines />
       <footer
-        className={`flex h-48 flex-col items-center justify-center gap-4 bg-[#061113] ${instrumentSerif.className}`}
+        className={`flex h-56 flex-col items-center justify-center gap-3 border-t border-hairline bg-ink ${instrumentSerif.className}`}
       >
-        <p>Design and Development by Hanzalah Waheed</p>
-        <p>&copy; {currentYear}</p>
-        <Link href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="text-white hover:underline" target="_blank">
+        <p className="text-lg text-paper-dim">Design and Development by Hanzalah Waheed</p>
+        <p className="font-ui text-[0.65rem] tracking-[0.3em] text-faint uppercase">&copy; {currentYear}</p>
+        <Link
+          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          className="font-ui text-[0.65rem] tracking-[0.25em] text-faint uppercase transition-colors hover:text-brass"
+          target="_blank"
+        >
           Do not Click
         </Link>
       </footer>
-      <Lines />
     </>
   )
 }

@@ -24,10 +24,10 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
           <button
             key={year}
             onClick={() => setSelectedYear(year)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
+            className={`font-ui rounded-full px-4 py-1.5 text-[0.7rem] tracking-[0.2em] uppercase transition-all duration-200 ${
               selectedYear === year
-                ? "bg-green-600 text-white shadow-[0_0_15px_rgba(22,163,74,0.4)]"
-                : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                ? "border border-brass bg-brass/10 text-brass"
+                : "border border-hairline text-faint hover:border-paper/30 hover:text-paper"
             }`}
           >
             {year}
@@ -42,7 +42,7 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
           colorScheme="dark"
           style={{
             background: "transparent",
-            color: "#ffffff",
+            color: "#ede6d6",
           }}
           blockSize={10}
           blockMargin={3}
@@ -67,27 +67,27 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap text) {
-          fill: #9ca3af !important;
+          fill: #a89f8c !important;
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-empty) {
-          fill: #374151 !important;
+          fill: rgba(237, 230, 214, 0.07) !important;
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-1) {
-          fill: #166534 !important;
+          fill: #4a3d26 !important;
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-2) {
-          fill: #16a34a !important;
+          fill: #7a6238 !important;
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-3) {
-          fill: #22c55e !important;
+          fill: #a5854f !important;
         }
 
         .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-4) {
-          fill: #4ade80 !important;
+          fill: #c9a870 !important;
         }
       `}</style>
     </div>

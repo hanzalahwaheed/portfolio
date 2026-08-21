@@ -49,7 +49,7 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => scrollToSection("about-me")}
-              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-blue-200"
+              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-[#e8d9b8]"
             >
               Me
             </button>
@@ -63,14 +63,14 @@ const Navbar = () => {
             <NextLink
               href="/blogs"
               target="_blank"
-              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-blue-200"
+              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-[#e8d9b8]"
             >
               Blogs
             </NextLink>
             <button
               type="button"
               onClick={() => scrollToSection("bookery")}
-              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-blue-200"
+              className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-[#e8d9b8]"
             >
               Bookery
             </button>

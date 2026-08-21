@@ -1,36 +1,32 @@
 import Link from "@/components/app-link"
+import Reveal from "@/components/reveal"
+import SectionHeading from "@/components/section-heading"
 import { ChevronRight } from "lucide-react"
 import { instrumentSerif } from "@/lib/fonts"
 
 import { builds, type Build } from "../config"
 
 const BuildItem = ({ build }: { build: Build }) => (
-  <li className="border-b border-white/10 pb-6 last:border-b-0 last:pb-0">
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3">
-        <h3 className="text-xl font-semibold text-white">
-          <Link
-            href={build.url}
-            className="text-[#66acb6] transition-colors hover:text-[#4fe0d0]"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {build.name}
-          </Link>
-        </h3>
-      </div>
-      <p className="text-gray-300">{build.description}</p>
+  <Reveal as="li">
+    <div className="border-t border-hairline py-8">
+      <h3 className={`${instrumentSerif.className} text-2xl leading-tight md:text-3xl`}>
+        <Link
+          href={build.url}
+          className="text-paper transition-colors hover:text-brass"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {build.name}
+        </Link>
+      </h3>
+      <p className="mt-3 max-w-prose leading-relaxed font-light text-paper-dim">{build.description}</p>
       {build.techStack.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {build.techStack.map(tech => (
-            <span key={tech} className="rounded-full bg-white/10 px-3 py-1 text-sm text-gray-300">
-              {tech}
-            </span>
-          ))}
-        </div>
+        <p className="font-ui mt-4 text-[0.7rem] tracking-[0.2em] text-faint uppercase">
+          {build.techStack.join(" · ")}
+        </p>
       )}
     </div>
-  </li>
+  </Reveal>
 )
 
 export const MyBuilds = () => {
@@ -38,12 +34,10 @@ export const MyBuilds = () => {
   const archived = builds.filter(build => build.archived)
 
   return (
-    <div id="builds" className="mx-auto mt-16 w-full max-w-3xl">
-      <h2 className={`${instrumentSerif.className} text-glow mb-8 text-center text-3xl text-white md:text-4xl`}>
-        my builds
-      </h2>
+    <div id="builds" className="mt-24">
+      <SectionHeading title="my builds" />
 
-      <ul className="space-y-6">
+      <ul>
         {current.map(build => (
           <BuildItem key={build.name} build={build} />
         ))}
@@ -52,16 +46,16 @@ export const MyBuilds = () => {
       {archived.length > 0 && (
         // <details> rather than useState: the archive stays in the server-rendered
         // DOM, so it works without JS and crawlers still see the older projects.
-        <details className="group mt-10 border-t border-white/10 pt-6">
-          <summary className="flex cursor-pointer list-none items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-300 [&::-webkit-details-marker]:hidden">
+        <details className="group mt-8 border-t border-hairline pt-6">
+          <summary className="font-ui flex cursor-pointer list-none items-center gap-1.5 text-[0.7rem] tracking-[0.25em] text-faint uppercase transition-colors hover:text-paper [&::-webkit-details-marker]:hidden">
             <ChevronRight
-              size={15}
+              size={14}
               className="transition-transform duration-200 group-open:rotate-90"
               aria-hidden="true"
             />
             Archive ({archived.length} earlier projects)
           </summary>
-          <ul className="mt-6 space-y-6 opacity-70 transition-opacity hover:opacity-100">
+          <ul className="mt-4 opacity-60 transition-opacity hover:opacity-100">
             {archived.map(build => (
               <BuildItem key={build.name} build={build} />
             ))}

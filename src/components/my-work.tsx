@@ -1,68 +1,55 @@
 import Link from "@/components/app-link"
+import Reveal from "@/components/reveal"
+import SectionHeading from "@/components/section-heading"
 import GitHubCalendar from "./github-calendar"
 import OssContributions from "./oss-contributions"
 import { instrumentSerif } from "@/lib/fonts"
 
 import { workExperiences, personalDetails, WorkExperience } from "../config"
 
-const TechBadge = ({ tech }: { tech: string }) => (
-  <span className="rounded-lg bg-white/10 px-3 py-1.5 text-sm font-medium tracking-wider text-gray-300 transition-colors hover:bg-white/15 hover:text-white">
-    {tech}
-  </span>
-)
-
-const WorkCard = ({ experience }: { experience: WorkExperience }) => (
-  <div className="rounded-2xl bg-white/4 p-6 backdrop-blur-sm">
-    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
-      <h3 className="text-2xl font-semibold text-white">
-        <Link
-          href={experience.companyUrl}
-          className="text-[#66acb6] transition-colors hover:text-[#4fe0d0]"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {experience.company}
-        </Link>
-        <span className="text-white"> - {experience.role}</span>
-      </h3>
-      <p className="text-sm whitespace-nowrap text-gray-400">{experience.duration}</p>
-    </div>
-    <p className="mt-3 mb-4 text-gray-300">{experience.description}</p>
-    <div className="flex flex-wrap gap-2">
-      {experience.techStack.map(tech => (
-        <TechBadge key={tech} tech={tech} />
-      ))}
-    </div>
-  </div>
+const WorkEntry = ({ experience }: { experience: WorkExperience }) => (
+  <Reveal>
+    <article className="group grid gap-3 border-t border-hairline py-10 sm:grid-cols-[9rem_1fr] sm:gap-8">
+      <p className="font-ui pt-1.5 text-[0.7rem] tracking-[0.2em] text-faint uppercase">{experience.duration}</p>
+      <div>
+        <h3 className={`${instrumentSerif.className} text-2xl leading-tight text-paper md:text-3xl`}>
+          {experience.role}
+          <span className="text-faint"> — </span>
+          <Link
+            href={experience.companyUrl}
+            className="text-brass transition-colors hover:text-paper"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {experience.company}
+          </Link>
+        </h3>
+        <p className="mt-4 max-w-prose leading-relaxed font-light text-paper-dim">{experience.description}</p>
+        <p className="font-ui mt-5 text-[0.7rem] tracking-[0.2em] text-faint uppercase">
+          {experience.techStack.join(" · ")}
+        </p>
+      </div>
+    </article>
+  </Reveal>
 )
 
 export const MyWork = () => {
   return (
-    <div className="mx-auto mt-16 w-full max-w-3xl">
+    <div className="mx-auto w-full">
       {/* Work Experience */}
-      <h2 className={`${instrumentSerif.className} text-glow mb-8 text-center text-3xl text-white md:text-4xl`}>
-        my work
-      </h2>
-      <div className="grid gap-6">
-        {workExperiences.map(experience => (
-          <WorkCard key={experience.company} experience={experience} />
-        ))}
-      </div>
+      <SectionHeading title="my work" />
+      <div>{workExperiences.map(experience => <WorkEntry key={experience.company} experience={experience} />)}</div>
 
       {/* OSS Contributions */}
-      <div className="mt-12">
-        <h2 className={`${instrumentSerif.className} text-glow mb-8 text-center text-3xl text-white md:text-4xl`}>
-          open source
-        </h2>
+      <div className="mt-24">
+        <SectionHeading title="open source" />
         <OssContributions />
       </div>
 
       {/* GitHub Calendar */}
-      <div className="mt-12">
-        <h2 className={`${instrumentSerif.className} text-glow mb-8 text-center text-3xl text-white md:text-4xl`}>
-          my github
-        </h2>
-        <div className="w-full max-w-full rounded-2xl bg-white/5 p-4 backdrop-blur-sm sm:p-6">
+      <div className="mt-24">
+        <h3 className={`${instrumentSerif.className} mb-6 text-2xl text-paper`}>the grind, mapped</h3>
+        <div className="w-full border border-hairline bg-ink-raised/50 p-4 sm:p-6">
           <GitHubCalendar username={personalDetails.githubUsername} />
         </div>
       </div>

@@ -2,54 +2,37 @@
 
 import { useState, useEffect } from "react"
 import Link from "@/components/app-link"
-import { GitMerge, GitPullRequest, CircleDot, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
+import { instrumentSerif } from "@/lib/fonts"
 
 import { ossContributions as staticContributions, OSSContribution, personalDetails } from "../config"
 import { handleApiResponse } from "@/lib/api-client"
 
 const OSSTimelineItem = ({ contribution, isLast }: { contribution: OSSContribution; isLast: boolean }) => {
-  const getIcon = (type: OSSContribution["type"]) => {
-    switch (type) {
-      case "Merge Request":
-        return <GitMerge size={16} className="text-purple-400" />
-      case "Issue":
-        return <CircleDot size={16} className="text-green-400" />
-      default:
-        return <GitPullRequest size={16} className="text-purple-400" />
-    }
-  }
-
   return (
     <div className="group relative flex gap-6 pb-8 last:pb-0">
       {/* Timeline Line */}
-      {!isLast && <div className="absolute top-8 left-[19px] h-full w-px bg-white/10 group-hover:bg-white/20" />}
+      {!isLast && <div className="absolute top-7 left-[5px] h-full w-px bg-hairline" />}
 
-      {/* Icon Node */}
-      <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#111] shadow-sm transition-all duration-300 group-hover:border-white/30 group-hover:shadow-[0_0_15px_rgba(102,172,182,0.3)]">
-        {getIcon(contribution.type)}
+      {/* Node */}
+      <div className="relative z-10 mt-2 flex h-[11px] w-[11px] shrink-0 items-center justify-center">
+        <span className="h-[11px] w-[11px] rotate-45 border border-brass/70 bg-ink transition-colors duration-300 group-hover:bg-brass" />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col pt-1">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col pt-0.5">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <Link
             href={contribution.projectUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg font-medium text-white transition-colors hover:text-[#66acb6]"
+            className={`${instrumentSerif.className} text-xl text-paper transition-colors hover:text-brass`}
           >
             {contribution.project}
           </Link>
-          <Link
-            href={contribution.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-gray-500 transition-colors hover:text-gray-300 hover:underline"
-          >
-            {contribution.type}
-          </Link>
+          <span className="font-ui text-[0.65rem] tracking-[0.25em] text-faint uppercase">{contribution.type}</span>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-gray-400 transition-colors group-hover:text-gray-300">
+        <p className="mt-1.5 max-w-prose text-sm leading-relaxed font-light text-paper-dim transition-colors group-hover:text-paper">
           {contribution.description}
         </p>
       </div>
@@ -81,10 +64,10 @@ export const OssContributions = () => {
   }, [])
 
   return (
-    <div className="custom-scrollbar max-h-[500px] overflow-y-auto pt-2 pr-4 pl-2">
+    <div className="custom-scrollbar max-h-[500px] overflow-y-auto pt-2 pr-4 pl-1">
       {isLoading ? (
         <div className="flex h-32 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[#66acb6]" />
+          <Loader2 className="h-6 w-6 animate-spin text-brass" />
         </div>
       ) : (
         contributions.map((contribution, index) => (

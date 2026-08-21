@@ -2,11 +2,11 @@ import { instrumentSerif } from "@/lib/fonts"
 
 const Grind = () => {
   return (
-    <div className="flex w-full items-center justify-center overflow-hidden bg-[#061113]">
+    <div className="flex w-full items-center justify-center overflow-hidden bg-ink py-10">
       <h1
-        className={`${instrumentSerif.className} text-[18vw] leading-[0.8] tracking-tighter whitespace-nowrap text-white opacity-90 select-none`}
+        className={`${instrumentSerif.className} text-[16vw] leading-[0.85] tracking-tight whitespace-nowrap text-transparent uppercase select-none [-webkit-text-stroke:1px_rgba(237,230,214,0.35)]`}
       >
-        KEEP BUILDING
+        keep building
       </h1>
     </div>
   )

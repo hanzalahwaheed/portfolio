@@ -34,9 +34,9 @@ export function FlowingCarouselTechStack({ className }: FlowingCarouselProps) {
   const bottomTechnologies = technologies.slice(8)
 
   return (
-    <div className={cn("relative w-full overflow-hidden bg-[#0A0A0A] py-8", className)}>
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#0A0A0A] to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#0A0A0A] to-transparent" />
+    <div className={cn("relative w-full overflow-hidden py-8", className)}>
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-ink to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-ink to-transparent" />
 
       {/* Top row - flowing left to right */}
       <div className="relative mb-6 overflow-hidden">
@@ -45,7 +45,7 @@ export function FlowingCarouselTechStack({ className }: FlowingCarouselProps) {
             topTechnologies.map((tech, index) => (
               <div
                 key={`top-${setIndex}-${index}`}
-                className="inline-flex shrink-0 items-center rounded-full border border-gray-600/50 bg-gray-800/50 px-4 py-2 font-mono text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-gray-700/50"
+                className="font-ui inline-flex shrink-0 items-center rounded-full border border-hairline px-4 py-2 text-[0.7rem] tracking-[0.2em] text-paper-dim uppercase transition-colors hover:border-brass/50 hover:text-paper"
               >
                 {tech}
               </div>
@@ -61,7 +61,7 @@ export function FlowingCarouselTechStack({ className }: FlowingCarouselProps) {
             bottomTechnologies.map((tech, index) => (
               <div
                 key={`bottom-${setIndex}-${index}`}
-                className="inline-flex shrink-0 items-center rounded-full border border-gray-600/50 bg-gray-800/50 px-4 py-2 font-mono text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-gray-700/50"
+                className="font-ui inline-flex shrink-0 items-center rounded-full border border-hairline px-4 py-2 text-[0.7rem] tracking-[0.2em] text-paper-dim uppercase transition-colors hover:border-brass/50 hover:text-paper"
               >
                 {tech}
               </div>
