@@ -386,10 +386,8 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                   if (isInline) {
                     return (
                       <code
-                        className={`inline-code rounded-none px-2 py-0.5 font-mono text-sm transition-all duration-200 ${
-                          isDark
-                            ? "border-b-2 border-[#66acb6]/50 bg-[#66acb6]/10 text-[#66acb6]"
-                            : "border-b-2 border-[#0B5964]/50 bg-[#0B5964]/10 text-[#0B5964]"
+                        className={`inline-code rounded px-1.5 py-0.5 font-mono text-sm transition-colors duration-200 ${
+                          isDark ? "bg-white/10 text-[#66acb6]" : "bg-neutral-900/5 text-[#0B5964]"
                         }`}
                         {...props}
                       >
@@ -399,35 +397,19 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                   }
 
                   return (
-                    <div
-                      className={`my-10 overflow-hidden rounded-none border shadow-lg transition-all duration-300 hover:shadow-xl ${
-                        isDark
-                          ? "border-neutral-800 bg-neutral-900 shadow-neutral-950/30"
-                          : "border-neutral-200 bg-neutral-50 shadow-neutral-300/20"
-                      }`}
-                    >
-                      <div
-                        className={`flex items-center justify-between border-b px-5 py-3 ${
-                          isDark ? "border-neutral-800 bg-neutral-900" : "border-neutral-200 bg-white"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`rounded-none border px-2.5 py-1 font-mono text-xs font-medium tracking-wider uppercase ${
-                              isDark
-                                ? "border-[#66acb6]/30 bg-[#66acb6]/10 text-[#66acb6]"
-                                : "border-[#0B5964]/30 bg-[#0B5964]/10 text-[#0B5964]"
-                            }`}
-                          >
-                            {language}
-                          </span>
-                        </div>
+                    <div className="my-10">
+                      <div className="flex items-center justify-between px-1 pb-2">
+                        <span
+                          className={`font-mono text-xs tracking-wider uppercase ${isDark ? "text-neutral-500" : "text-neutral-400"}`}
+                        >
+                          {language}
+                        </span>
                         <button
                           onClick={() => handleCopyCode(codeString, currentIndex)}
-                          className={`rounded-none border px-3 py-1.5 text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                          className={`text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${
                             isDark
-                              ? "border-neutral-700 text-neutral-400 hover:border-[#66acb6] hover:text-[#66acb6]"
-                              : "border-neutral-300 text-neutral-600 hover:border-[#0B5964] hover:text-[#0B5964]"
+                              ? "text-neutral-500 hover:text-[#66acb6]"
+                              : "text-neutral-400 hover:text-[#0B5964]"
                           }`}
                         >
                           {copiedCodeBlocks[currentIndex] ? (
@@ -443,7 +425,11 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
                           )}
                         </button>
                       </div>
-                      <div className="overflow-x-auto p-5">
+                      <div
+                        className={`overflow-x-auto p-5 ${
+                          isDark ? "bg-white/[0.04]" : "bg-neutral-900/[0.04]"
+                        }`}
+                      >
                         <pre
                           className={`font-mono text-sm leading-relaxed ${
                             isDark ? "text-neutral-300" : "text-neutral-700"
