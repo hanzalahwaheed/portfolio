@@ -69,14 +69,28 @@ function Home() {
   // and getFullYear() returns 1970.
   const currentYear = new Date().getFullYear()
 
-  // Rotate through the hero backgrounds in a fixed order. All layers render
-  // stacked; the active one fades in. Done in effects (rather than during
+  // Cycle through the hero backgrounds in a fixed order, advancing once per
+  // page load (stored in localStorage). Done in an effect (rather than during
   // render) so the server and initial client render agree.
   const [heroIndex, setHeroIndex] = useState(0)
   const [extractedThemes, setExtractedThemes] = useState<Record<string, HeroTheme>>({})
   const heroBgRef = useRef<HTMLDivElement>(null)
 
-  // Extract a palette from each background once, so switching themes is instant.
+  useEffect(() => {
+    const stored = Number(localStorage.getItem("hero-bg-index")) || 0
+    const index = stored % heroBackgrounds.length
+    setHeroIndex(index)
+    localStorage.setItem("hero-bg-index", String((index + 1) % heroBackgrounds.length))
+
+    // Warm the browser cache for every background, so future refreshes swap
+    // instantly instead of re-fetching from the CDN.
+    heroBackgrounds.forEach(src => {
+      const img = new Image()
+      img.src = src
+    })
+  }, [])
+
+  // Extract a palette from each background once, so themes are exact.
   useEffect(() => {
     let cancelled = false
     heroBackgrounds.forEach(async src => {
@@ -94,11 +108,6 @@ function Home() {
     const src = heroBackgrounds[heroIndex]
     applyHeroTheme(extractedThemes[src] ?? heroThemes[src])
   }, [heroIndex, extractedThemes])
-
-  useEffect(() => {
-    const id = setInterval(() => setHeroIndex(index => (index + 1) % heroBackgrounds.length), 10000)
-    return () => clearInterval(id)
-  }, [])
 
   // Slow parallax: drift the hero background at ~0.15x scroll so it lags behind
   // the page, making the story section feel like scrolling deeper into the same
