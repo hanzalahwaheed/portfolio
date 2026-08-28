@@ -70,7 +70,9 @@ the live URL and a Version ID.
 
 ## Notes
 
-- D1 binding uses `remote: true`, so local dev and prod share the same
-  `portfolio-db` database. There is no separate prod DB to migrate during a
-  plain deploy. Run `npm run db:migrate:prod` only when schema changed.
+- Local dev uses the **local** D1 in `.wrangler/state`; the `remote: true` flag
+  was removed from the binding on 2026-08-28. Prod still binds the real
+  `portfolio-db` by `database_id`, so a plain deploy is unaffected. Seed local
+  data with `npm run db:pull`. Run `npm run db:migrate:prod` only when the
+  schema changed.
 - After deploying, report the live URL and the Version ID back to the user.
