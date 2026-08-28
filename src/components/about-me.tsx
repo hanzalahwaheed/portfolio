@@ -25,7 +25,7 @@ const AboutMe = () => {
             <div className="mb-20 flex flex-col items-center gap-10 sm:flex-row sm:items-start sm:gap-12">
               <div className="flex-shrink-0">
                 {/* Arch frame — editorial portrait treatment */}
-                <div className="w-48 overflow-hidden rounded-t-full border border-hairline p-2 sm:w-52">
+                <div className="border-hairline w-48 overflow-hidden rounded-t-full border p-2 sm:w-52">
                   <Image
                     src="/images/pfp.jpeg"
                     alt="Hanzalah Waheed"
@@ -36,17 +36,24 @@ const AboutMe = () => {
                 </div>
               </div>
               <div className="flex-1">
-                <p className="text-xl leading-relaxed font-light text-paper-dim first-letter:float-left first-letter:mr-3 first-letter:font-instrument-serif first-letter:text-7xl first-letter:leading-[0.8] first-letter:text-paper md:text-2xl">
-                  I like building software that brings order to complicated data and unclear requirements. At{" "}
+                <p className="text-paper-dim first-letter:font-instrument-serif first-letter:text-paper text-xl leading-relaxed font-light first-letter:float-left first-letter:mr-3 first-letter:text-7xl first-letter:leading-[0.8] md:text-2xl">
+                  Two years ago I joined{" "}
                   <Link
                     href="https://www.stockinsights.ai"
-                    className="text-brass transition-colors hover:text-paper"
+                    className="text-brass hover:text-paper transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    StockInsights AI
+                    StockInsights.ai
                   </Link>
-                  , I work on systems for AI-driven financial products.
+                  . I am now a founding engineer there, and I own most of the features on the primary web app.
+                  Underneath them runs a RAG pipeline I built that reads 25,000+ SEC and earnings filings a month, so
+                  analysts do not have to. I cut the infra bill by 80% and shipped the first recurring API revenue the
+                  company ever booked.
+                </p>
+                <p className="text-paper-dim mt-6 text-xl leading-relaxed font-light md:text-2xl">
+                  Open source is where I learned most of this, so I still send patches whenever the day leaves room.
+                  Some of that work is below.
                 </p>
               </div>
             </div>

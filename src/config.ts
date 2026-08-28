@@ -121,6 +121,14 @@ export interface Build {
 
 export const builds: Build[] = [
   {
+    name: "prfrd",
+    description:
+      "A performance-review engine where two agents argue. An advocate and an examiner build opposing, evidence-backed cases from an engineer's quarterly signals, an arbiter rules on them, and the full debate transcript is persisted to Postgres so every verdict can be audited. Weekly GitHub and Slack activity is normalized and rolled up into the monthly and quarterly evidence that grounds each claim, then surfaced as manager dashboards with team KPI rollups, risk flags for after-hours load and blockers, and per-engineer drill-downs.",
+    url: "https://prfrd.vercel.app/",
+    techStack: ["Next.js", "Vercel AI SDK", "TypeScript", "PostgreSQL", "Drizzle", "OpenAI Codex"],
+    githubUrl: "https://github.com/hanzalahwaheed/prfrd",
+  },
+  {
     name: "A/B Image Generator",
     description:
       "An application that helps you club together multiple images and then generate an A/B image for you, that you can post anywhere to A/B test your ideas. Launched on Peerlist, where it reached the top 30 on the leaderboard, and fully open-sourced.",
