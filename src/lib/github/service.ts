@@ -1,6 +1,7 @@
 import { GitHubSearchIssueItem, GitHubSearchResponse, Contribution } from "./types"
 import { transformToContribution } from "./transformers"
 import { handleApiResponse } from "../api-client"
+import { toRateLimitError } from "./errors"
 
 /**
  * GitHub Service
@@ -34,12 +35,20 @@ export class GitHubService {
   private async searchIssues(query: string, limit: number): Promise<GitHubSearchIssueItem[]> {
     const url = `${this.baseUrl}/search/issues?q=${encodeURIComponent(query)}&sort=created&order=desc&per_page=${limit}`
 
+    const token = process.env.GITHUB_TOKEN
+
     const response = await fetch(url, {
       headers: {
-        Accept: "application/vnd.github.v3+json",
+        Accept: "application/vnd.github+json",
         "User-Agent": this.userAgent,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     })
+
+    const rateLimitError = toRateLimitError(response)
+    if (rateLimitError) {
+      throw rateLimitError
+    }
 
     const data = await handleApiResponse<GitHubSearchResponse>(response)
     return data.items

@@ -75,6 +75,8 @@ The production D1 database is `portfolio-db`, bound as `DB`. Local dev uses the 
 ### Other libs
 
 - `src/lib/r2.ts` — uploads to Cloudflare R2 via the S3 SDK (used by `api.upload.ts`).
+- `src/lib/cache.ts` — thin wrapper over the Workers Cache API (`caches.default`). It is a no-op in dev, where `caches` does not exist.
+- `src/lib/github/` — GitHub Search API client behind `/api/github-latest-contributions`. The Search API allows 10 requests per minute per IP without a token and 30 with one, so set the optional `GITHUB_TOKEN` env var (a PAT that needs public read access only). The route caches each result for an hour in memory and for a day in the Workers cache, and it serves the stale copy — or an empty list, which makes the client fall back to `ossContributions` in `src/config.ts` — when GitHub fails.
 - `src/lib/fonts.ts` — local Google Sans (from `src/fonts/`) + Instrument Serif font objects exposing `.variable` / `.className`.
 - `src/config.ts` — **all site content** (personal details, socials, OSS contributions, work experience, builds, books). Edit here to change displayed content.
 - `src/components/app-image.tsx` / `app-link.tsx` — replacements for `next/image` and `next/link`; use these instead of Next equivalents.
