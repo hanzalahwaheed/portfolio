@@ -79,17 +79,33 @@ export interface WorkExperience {
   duration: string
   description: string
   techStack: string[]
+  /** Optional logo mark shown beside the entry. Path under /public. */
+  logo?: string
+  logoAlt?: string
 }
 
 export const workExperiences: WorkExperience[] = [
   {
+    company: "C2SI",
+    companyUrl: "https://github.com/c2siorg/dataloom",
+    role: "Google Summer of Code 2026 Contributor",
+    duration: "Jun 2026 – Aug 2026",
+    description:
+      "I build DataLoom, an open-source, browser-based data wrangling tool, for the Ceylon Computer Science Institute. I started by setting up the transformation and feature registries the app now extends through, which made every later feature cheap to add: multi-format ingest (TSV, JSON, XLSX, Parquet), data profiling, quality assessment, charts, formula columns, reusable transformation pipelines, and a tabbed workspace layout. I also co-authored the authentication layer and am migrating the frontend to TypeScript.",
+    techStack: ["Python", "FastAPI", "pandas", "PostgreSQL", "React", "TypeScript", "Docker"],
+    logo: "/images/gsoc.png",
+    logoAlt: "Google Summer of Code",
+  },
+  {
     company: "StockInsights AI",
     companyUrl: "https://www.stockinsights.ai",
-    role: "Software Development Engineer",
+    role: "Founding Software Engineer",
     duration: "Aug 2024 – Present",
     description:
       "I build the AI layer of an equity research platform: a RAG pipeline that auto-summarizes 25,000+ SEC and earnings filings a month, a multi-session AI chat system, and the frontend on top of both. Along the way I've migrated our full-text search off MongoDB Atlas, cut our Vercel bill ~80% by tracking down scraper traffic, and shipped the company's first recurring API revenue with Stripe metered billing.",
     techStack: ["Python", "TypeScript", "Next.js", "PostgreSQL", "pgvector", "AWS", "Docker"],
+    logo: "/images/stockinsights.svg",
+    logoAlt: "StockInsights AI",
   },
 ]
 

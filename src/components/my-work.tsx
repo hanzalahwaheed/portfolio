@@ -1,3 +1,4 @@
+import Image from "@/components/app-image"
 import Link from "@/components/app-link"
 import Reveal from "@/components/reveal"
 import SectionHeading from "@/components/section-heading"
@@ -10,7 +11,18 @@ import { workExperiences, personalDetails, WorkExperience } from "../config"
 const WorkEntry = ({ experience }: { experience: WorkExperience }) => (
   <Reveal>
     <article className="group grid gap-3 border-t border-hairline py-10 sm:grid-cols-[9rem_1fr] sm:gap-8">
-      <p className="font-ui pt-1.5 text-[0.7rem] tracking-[0.2em] text-faint uppercase">{experience.duration}</p>
+      <div className="flex flex-col gap-4 pt-1.5">
+        {experience.logo && (
+          <Image
+            src={experience.logo}
+            alt={experience.logoAlt ?? experience.company}
+            width={40}
+            height={40}
+            className="h-10 w-10 object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+          />
+        )}
+        <p className="font-ui text-[0.7rem] tracking-[0.2em] text-faint uppercase">{experience.duration}</p>
+      </div>
       <div>
         <h3 className={`${instrumentSerif.className} text-2xl leading-tight text-paper md:text-3xl`}>
           {experience.role}
