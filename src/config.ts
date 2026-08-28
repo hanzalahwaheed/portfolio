@@ -134,7 +134,7 @@ export const builds: Build[] = [
       "An application that helps you club together multiple images and then generate an A/B image for you, that you can post anywhere to A/B test your ideas. Launched on Peerlist, where it reached the top 30 on the leaderboard, and fully open-sourced.",
     url: "https://ab-img-gen.vercel.app/",
     techStack: ["Next.js", "Tailwind CSS", "TypeScript"],
-    githubUrl: "https://github.com/hanzalahwaheed/ab-image-generator",
+    githubUrl: "https://github.com/hanzalahwaheed/ab-img-gen",
   },
   {
     name: "Product Owl",
@@ -142,7 +142,7 @@ export const builds: Build[] = [
       "A web app that tracks your favourite Amazon products and notifies you when they hit their lowest price, using scheduled web scraping.",
     url: "https://product-owl.vercel.app/",
     techStack: ["Next.js", "Tailwind CSS", "TypeScript", "PostgreSQL", "Web Scraping"],
-    githubUrl: "https://github.com/hanzalahwaheed/product-owl",
+    githubUrl: "https://github.com/hanzalahwaheed/ProductOwl",
   },
   {
     name: "Imagine Text",
@@ -150,7 +150,7 @@ export const builds: Build[] = [
       "An image-to-text extractor built on Tesseract.js, running OCR client-side with Cloudinary handling uploads.",
     url: "https://imagine-text.vercel.app/",
     techStack: ["Next.js", "Tailwind CSS", "TypeScript", "TesseractJS", "Cloudinary"],
-    githubUrl: "https://github.com/hanzalahwaheed/imagine-text",
+    githubUrl: "https://github.com/hanzalahwaheed/ImagineText",
     archived: true,
   },
   {
