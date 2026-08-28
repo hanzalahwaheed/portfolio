@@ -19,6 +19,7 @@
     "db:introspect": "wrangler d1 execute portfolio-db --remote --command \"SELECT name FROM sqlite_master WHERE type='table'\"",
     "db:verify": "wrangler d1 execute portfolio-db --remote --command \"SELECT COUNT(*) AS count FROM Post\"",
     "db:verify:local": "wrangler d1 execute portfolio-db --local --command \"SELECT COUNT(*) AS count FROM Post\"",
+    "db:pull": "bash scripts/db-pull.sh",
     "db:export:neon": "tsx scripts/export-neon-posts-to-d1-sql.ts",
     "db:import:d1": "wrangler d1 execute portfolio-db --remote --file tmp/neon-posts-d1-import.sql",
     "doctor": "npx react-doctor@latest"

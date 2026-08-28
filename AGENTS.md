@@ -22,6 +22,7 @@ npm run db:studio    # List local D1 tables
 npm run db:introspect # List remote D1 tables
 npm run db:verify    # Count rows in the remote Post table
 npm run db:verify:local # Count rows in the local Post table
+npm run db:pull      # Copy remote Post rows into the local D1 database
 ```
 
 No test framework is configured. Verify changes manually with `npm run dev`.
@@ -69,7 +70,7 @@ Use Drizzle's SQLite core for schema changes:
 
 After changing schema, run `npm run db:generate`, then apply locally with `npm run db:migrate` and remotely with `npm run db:migrate:prod`.
 
-The production D1 database is `portfolio-db`, bound as `DB`. Local dev also uses the remote D1 database because `wrangler.jsonc` sets the D1 binding's `remote` flag to `true`.
+The production D1 database is `portfolio-db`, bound as `DB`. Local dev uses the **local** D1 database in `.wrangler/state`, so `npm run dev` starts without a Cloudflare remote connection. Seed it with `npm run db:pull`, which copies the remote `Post` rows into the local database.
 
 ### Other libs
 

@@ -7,8 +7,7 @@
       "binding": "DB",
       "database_name": "portfolio-db",
       "database_id": "32aa7b5f-ae40-4e58-889b-1299ef4bf583",
-      "migrations_dir": "drizzle",
-      "remote": true,
-    },
-  ],
+      "migrations_dir": "drizzle"
+    }
+  ]
 }
