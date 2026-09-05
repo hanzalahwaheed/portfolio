@@ -1,11 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import rehypeHighlight from "rehype-highlight"
-import rehypeRaw from "rehype-raw"
-import { Copy, Check, Moon, Sun, ArrowLeft, ArrowUp, Mail, Calendar } from "lucide-react"
+import MarkdownBody from "@/components/blog/markdown-body"
+import { Moon, Sun, ArrowLeft, ArrowUp, Mail, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import type { BlogPost as Post } from "@/lib/blogs"
 import { calculateReadTime } from "@/lib/blog-utils"
@@ -13,44 +10,12 @@ import Link from "@/components/app-link"
 import { instrumentSerif } from "@/lib/fonts"
 import { contactLinks } from "@/config"
 
-// Custom remark plugin to wrap standalone code in paragraphs
-const remarkWrapStandaloneCode = () => {
-  return (tree: any) => {
-    const visit = (node: any) => {
-      if (node.type === "paragraph") {
-        const children = node.children
-        // Check if paragraph contains only code elements with optional whitespace
-        const hasOnlyCode = children.every(
-          (child: any) => child.type === "code" || (child.type === "text" && child.value.trim() === ""),
-        )
-
-        if (hasOnlyCode && children.length > 1) {
-          // Split into separate paragraphs
-          const newChildren: any[] = []
-          children.forEach((child: any) => {
-            if (child.type === "code") {
-              newChildren.push({ type: "paragraph", children: [child] })
-            }
-          })
-          node.children = newChildren
-        }
-      }
-      if (node.children) {
-        node.children.forEach(visit)
-      }
-    }
-    visit(tree)
-  }
-}
-
 interface MinimalBlogContentProps {
   post: Post
 }
 
 export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
   const [isDark, setIsDark] = useState(true)
-  const [copiedCodeBlocks, setCopiedCodeBlocks] = useState<Record<string, boolean>>({})
-  const codeBlockCounter = useRef(0)
   const [readingProgress, setReadingProgress] = useState(0)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
@@ -65,7 +30,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
     } else {
       setIsDark(true)
     }
-    codeBlockCounter.current = 0
   }, [post.id])
 
   useEffect(() => {
@@ -104,18 +68,6 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
 
   const toggleTheme = () => {
     setIsDark(!isDark)
-  }
-
-  const handleCopyCode = async (code: string, index: string) => {
-    try {
-      await navigator.clipboard.writeText(code)
-      setCopiedCodeBlocks(prev => ({ ...prev, [index]: true }))
-      setTimeout(() => {
-        setCopiedCodeBlocks(prev => ({ ...prev, [index]: false }))
-      }, 2000)
-    } catch (err) {
-      console.error("Failed to copy code:", err)
-    }
   }
 
   const scrollToTop = () => {
@@ -213,7 +165,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
           <div className={`group mt-12 flex items-center gap-4 ${reveal("delay-200")}`}>
             <div className="relative shrink-0">
               <img
-                src="/images/pfp.jpeg"
+                src="/images/pfp.webp"
                 alt="Hanzalah Waheed"
                 className={`h-14 w-14 rounded-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 ${
                   isDark ? "ring-turquoise/30 ring-1" : "ring-deep-teal/25 ring-1"
@@ -270,229 +222,7 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
               isDark ? "prose-invert text-neutral-300" : "text-neutral-700"
             }`}
           >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkWrapStandaloneCode]}
-              rehypePlugins={[[rehypeHighlight], rehypeRaw]}
-              components={{
-                h1: ({ children }) => (
-                  <h2
-                    className={`${instrumentSerif.className} my-8 scroll-mt-24 text-4xl leading-tight font-bold tracking-tight md:text-5xl ${
-                      isDark ? "text-white" : "text-neutral-900"
-                    }`}
-                  >
-                    {children}
-                  </h2>
-                ),
-                h2: ({ children }) => (
-                  <h2
-                    className={`${instrumentSerif.className} my-10 mt-16 scroll-mt-24 text-3xl leading-tight font-bold tracking-tight md:text-4xl ${
-                      isDark ? "text-white" : "text-neutral-900"
-                    }`}
-                  >
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3
-                    className={`${instrumentSerif.className} my-8 scroll-mt-24 text-2xl leading-tight font-semibold md:text-3xl ${
-                      isDark ? "text-white" : "text-neutral-900"
-                    }`}
-                  >
-                    {children}
-                  </h3>
-                ),
-                h4: ({ children }) => (
-                  <h4
-                    className={`${instrumentSerif.className} my-6 scroll-mt-24 text-xl font-semibold md:text-2xl ${
-                      isDark ? "text-white" : "text-neutral-900"
-                    }`}
-                  >
-                    {children}
-                  </h4>
-                ),
-                p: ({ children }) => (
-                  <p className="mb-8 text-lg leading-relaxed font-light antialiased md:text-xl">{children}</p>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote
-                    className={`${instrumentSerif.className} my-10 border-l-4 pl-6 text-xl leading-relaxed italic ${
-                      isDark
-                        ? "border-[#66acb6] bg-neutral-900/50 text-neutral-300"
-                        : "border-[#0B5964] bg-neutral-50 text-neutral-700"
-                    }`}
-                  >
-                    {children}
-                  </blockquote>
-                ),
-                ul: ({ children }) => <ul className="my-6 ml-6 list-disc space-y-4 font-light">{children}</ul>,
-                ol: ({ children }) => <ol className="my-6 ml-6 list-decimal space-y-4 font-light">{children}</ol>,
-                li: ({ children }) => (
-                  <li
-                    className={`text-lg leading-relaxed font-light md:text-xl ${isDark ? "text-neutral-300 marker:text-[#66acb6]" : "text-neutral-700 marker:text-[#0B5964]"}`}
-                  >
-                    {children}
-                  </li>
-                ),
-                hr: () => <hr className={`my-16 border-2 ${isDark ? "border-neutral-800" : "border-neutral-200"}`} />,
-                strong: ({ children }) => (
-                  <strong className={`font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{children}</strong>
-                ),
-                em: ({ children }) => <em className="italic">{children}</em>,
-                img: ({ src, alt }) => (
-                  <img
-                    src={typeof src === "string" ? src : undefined}
-                    alt={alt || ""}
-                    loading="lazy"
-                    className={`mx-auto my-10 block h-auto max-w-full rounded-lg border ${
-                      isDark ? "border-neutral-800" : "border-neutral-200"
-                    }`}
-                  />
-                ),
-                a: ({ children, href }) => (
-                  <a
-                    href={href}
-                    className={`border-b-2 pb-0.5 font-medium transition-all duration-200 hover:pb-1 ${
-                      isDark
-                        ? "border-[#66acb6] text-[#66acb6] hover:border-white hover:text-white hover:shadow-[0_2px_8px_rgba(102,172,182,0.3)]"
-                        : "border-[#0B5964] text-[#0B5964] hover:border-neutral-900 hover:text-neutral-900 hover:shadow-[0_2px_8px_rgba(11,89,100,0.2)]"
-                    }`}
-                    target={href?.startsWith("http") ? "_blank" : undefined}
-                    rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
-                  >
-                    {children}
-                  </a>
-                ),
-                code: ({ className, children, node, ...props }: any) => {
-                  // Detect inline vs block code:
-                  // - Fenced code blocks (```) have a parent <pre> element
-                  // - Inline code (`) does not have a parent <pre> element
-                  // Note: rehype-highlight only adds language class when a language is specified
-                  const match = /language-(\w+)/.exec(className || "")
-                  const codeString = String(children).replace(/\n$/, "")
-                  // Check if this is block code by looking at parent element or if content has newlines
-                  const isBlock =
-                    node?.tagName === "pre" ||
-                    node?.parentElement?.tagName?.toLowerCase() === "pre" ||
-                    (codeString.includes("\n") && !match) ||
-                    !!match
-                  const language = match ? match[1] : "plaintext"
-                  const isInline = !isBlock
-
-                  let currentIndex = ""
-                  if (!isInline) {
-                    currentIndex = `code-${codeBlockCounter.current++}`
-                  }
-
-                  if (isInline) {
-                    return (
-                      <code
-                        className={`inline-code rounded px-1.5 py-0.5 font-mono text-sm transition-colors duration-200 ${
-                          isDark ? "bg-white/10 text-[#66acb6]" : "bg-neutral-900/5 text-[#0B5964]"
-                        }`}
-                        {...props}
-                      >
-                        {children}
-                      </code>
-                    )
-                  }
-
-                  return (
-                    <div className="my-10">
-                      <div className="flex items-center justify-between px-1 pb-2">
-                        <span
-                          className={`font-mono text-xs tracking-wider uppercase ${isDark ? "text-neutral-500" : "text-neutral-400"}`}
-                        >
-                          {language}
-                        </span>
-                        <button
-                          onClick={() => handleCopyCode(codeString, currentIndex)}
-                          className={`text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${
-                            isDark
-                              ? "text-neutral-500 hover:text-[#66acb6]"
-                              : "text-neutral-400 hover:text-[#0B5964]"
-                          }`}
-                        >
-                          {copiedCodeBlocks[currentIndex] ? (
-                            <span className="flex items-center gap-1.5">
-                              <Check size={14} />
-                              Copied
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1.5">
-                              <Copy size={14} />
-                              Copy
-                            </span>
-                          )}
-                        </button>
-                      </div>
-                      <div
-                        className={`overflow-x-auto p-5 ${
-                          isDark ? "bg-white/[0.04]" : "bg-neutral-900/[0.04]"
-                        }`}
-                      >
-                        <pre
-                          className={`font-mono text-sm leading-relaxed ${
-                            isDark ? "text-neutral-300" : "text-neutral-700"
-                          }`}
-                        >
-                          <code className={className} {...props}>
-                            {children}
-                          </code>
-                        </pre>
-                      </div>
-                    </div>
-                  )
-                },
-                table: ({ children }) => (
-                  <div className="my-10 overflow-x-auto rounded-none border shadow-md">
-                    <table
-                      className={`w-full border-collapse text-left ${isDark ? "border-neutral-800" : "border-neutral-200"}`}
-                    >
-                      {children}
-                    </table>
-                  </div>
-                ),
-                thead: ({ children }) => (
-                  <thead
-                    className={`font-semibold ${
-                      isDark ? "bg-neutral-900 text-neutral-200" : "bg-neutral-100 text-neutral-900"
-                    }`}
-                  >
-                    {children}
-                  </thead>
-                ),
-                tbody: ({ children }) => <tbody>{children}</tbody>,
-                tr: ({ children }) => (
-                  <tr
-                    className={`border-b transition-all duration-200 ${
-                      isDark ? "border-neutral-800 hover:bg-neutral-900/50" : "border-neutral-200 hover:bg-neutral-50"
-                    }`}
-                  >
-                    {children}
-                  </tr>
-                ),
-                th: ({ children }) => (
-                  <th
-                    className={`border px-6 py-4 text-sm tracking-wider uppercase ${
-                      isDark ? "border-neutral-800" : "border-neutral-200"
-                    }`}
-                  >
-                    {children}
-                  </th>
-                ),
-                td: ({ children }) => (
-                  <td
-                    className={`border px-6 py-4 text-sm ${
-                      isDark ? "border-neutral-800 text-neutral-300" : "border-neutral-200 text-neutral-700"
-                    }`}
-                  >
-                    {children}
-                  </td>
-                ),
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
+            <MarkdownBody content={post.content} isDark={isDark} />
           </div>
         </article>
 

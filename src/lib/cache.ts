@@ -5,7 +5,7 @@ function getDefaultCache() {
     return null
   }
 
-  return caches.default
+  return (caches as CacheStorage & { default?: Cache }).default ?? null
 }
 
 export function cacheRequest(path: string) {

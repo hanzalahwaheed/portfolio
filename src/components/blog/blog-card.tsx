@@ -1,6 +1,5 @@
 import Link from "@/components/app-link"
-import type { BlogPost as Post } from "@/lib/blogs"
-import { calculateReadTime } from "@/lib/blog-utils"
+import type { BlogPostSummary as Post } from "@/lib/blogs"
 import { instrumentSerif } from "@/lib/fonts"
 
 interface BlogCardProps {
@@ -16,7 +15,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="flex flex-col gap-4">
         <div className="flex flex-1 flex-col gap-3">
           <div className="text-olive-grey flex flex-wrap items-center gap-3 font-mono text-[0.7rem] tracking-[0.2em] uppercase">
-            <span>{post.readTime || calculateReadTime(post.content)} read</span>
+            <span>{post.readTime} read</span>
           </div>
 
           <h2

@@ -9,7 +9,3 @@ export const newsreader = {
 export const uiSans = {
   className: "font-ui",
 }
-
-export const googleSans = {
-  variable: "font-google-sans",
-}

@@ -11,18 +11,31 @@ interface AppImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, "src">
 export default function Image({
   src,
   fill,
-  priority: _priority,
+  priority = false,
+  loading,
+  fetchPriority,
+  decoding = "async",
   width,
   height,
   className = "",
   style,
   ...props
 }: AppImageProps) {
-  void _priority
-
   const fillStyle: CSSProperties | undefined = fill
     ? { position: "absolute", inset: 0, width: "100%", height: "100%", ...style }
     : style
 
-  return <img src={src} width={width} height={height} className={className} style={fillStyle} {...props} />
+  return (
+    <img
+      loading={priority ? "eager" : (loading ?? "lazy")}
+      fetchPriority={priority ? "high" : fetchPriority}
+      decoding={decoding}
+      src={src}
+      width={width}
+      height={height}
+      className={className}
+      style={fillStyle}
+      {...props}
+    />
+  )
 }

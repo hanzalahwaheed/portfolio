@@ -33,7 +33,7 @@ const Bookery = () => {
   }, [selectedCategory, filteredLibrary, activeBook.id])
 
   return (
-    <section className="relative w-full overflow-hidden bg-ink px-4 py-24 text-paper">
+    <section className="bg-ink text-paper relative w-full overflow-hidden px-4 py-24">
       {/* --- Ambient mood lighting based on the active book cover --- */}
       <div
         className={`pointer-events-none absolute inset-0 z-0 bg-gradient-to-br ${activeBook.color} via-ink to-ink-raised opacity-30 transition-colors duration-1000 ease-in-out`}
@@ -43,8 +43,8 @@ const Bookery = () => {
         {/* Header */}
         <Reveal>
           <header className="mb-8">
-            <h2 className={`${instrumentSerif.className} text-4xl leading-none text-paper md:text-5xl`}>Bookery</h2>
-            <p className="mt-4 max-w-md font-light text-paper-dim">
+            <h2 className={`${instrumentSerif.className} text-paper text-4xl leading-none md:text-5xl`}>Bookery</h2>
+            <p className="text-paper-dim mt-4 max-w-md font-light">
               I love reading. Here are some of my favorite books.
             </p>
           </header>
@@ -59,7 +59,7 @@ const Bookery = () => {
               className={`border-b pb-1 text-[0.7rem] tracking-[0.2em] uppercase transition-all duration-300 ${
                 selectedCategory === category
                   ? "border-brass text-brass"
-                  : "border-transparent text-faint hover:text-paper"
+                  : "text-faint hover:text-paper border-transparent"
               }`}
             >
               {category}
@@ -77,6 +77,8 @@ const Bookery = () => {
           <div className="flex flex-shrink-0 justify-center sm:block">
             <div className="animate-float group relative aspect-[2/3] w-44 shadow-2xl md:w-52">
               <img
+                loading="lazy"
+                decoding="async"
                 src={activeBook.cover}
                 alt={activeBook.title}
                 className="h-full w-full object-cover shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7)]"
@@ -90,15 +92,15 @@ const Bookery = () => {
 
           {/* Details */}
           <div className="min-w-0 flex-1">
-            <span className="font-ui text-[0.65rem] tracking-[0.3em] text-brass uppercase">{activeBook.category}</span>
-            <h3 className={`${instrumentSerif.className} mt-2 text-3xl leading-tight text-paper md:text-4xl`}>
+            <span className="font-ui text-brass text-[0.65rem] tracking-[0.3em] uppercase">{activeBook.category}</span>
+            <h3 className={`${instrumentSerif.className} text-paper mt-2 text-3xl leading-tight md:text-4xl`}>
               {activeBook.title}
             </h3>
-            <p className="mt-1 font-light tracking-wide text-paper-dim italic">{activeBook.author}</p>
+            <p className="text-paper-dim mt-1 font-light tracking-wide italic">{activeBook.author}</p>
 
             {activeBook.quote && (
-              <div className="mt-6 border-l border-brass/50 pl-5">
-                <p className="text-lg leading-relaxed font-light text-paper-dim italic">
+              <div className="border-brass/50 mt-6 border-l pl-5">
+                <p className="text-paper-dim text-lg leading-relaxed font-light italic">
                   &ldquo;{activeBook.quote}&rdquo;
                 </p>
               </div>
@@ -106,12 +108,14 @@ const Bookery = () => {
 
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className={`${instrumentSerif.className} text-lg text-brass`}>{Math.floor(activeBook.rating)}</span>
-                <span className="font-ui text-[0.65rem] tracking-[0.2em] text-faint uppercase">/ 5</span>
+                <span className={`${instrumentSerif.className} text-brass text-lg`}>
+                  {Math.floor(activeBook.rating)}
+                </span>
+                <span className="font-ui text-faint text-[0.65rem] tracking-[0.2em] uppercase">/ 5</span>
               </div>
               <a
                 href={activeBook.link}
-                className="font-ui flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.25em] text-brass uppercase transition-colors hover:text-paper"
+                className="font-ui text-brass hover:text-paper flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.25em] uppercase transition-colors"
               >
                 Details <ArrowRight size={12} />
               </a>
@@ -120,19 +124,17 @@ const Bookery = () => {
         </div>
 
         {/* Cover strip selector */}
-        <div className="scrollbar-hide mt-12 flex gap-3 overflow-x-auto border-t border-hairline pt-8">
+        <div className="scrollbar-hide border-hairline mt-12 flex gap-3 overflow-x-auto border-t pt-8">
           {filteredLibrary.map(book => (
             <button
               key={book.id}
               onClick={() => handleBookChange(book)}
               aria-label={book.title}
               className={`relative aspect-[2/3] w-12 flex-shrink-0 overflow-hidden border transition-all duration-300 md:w-14 ${
-                activeBook.id === book.id
-                  ? "border-brass opacity-100"
-                  : "border-hairline opacity-40 hover:opacity-90"
+                activeBook.id === book.id ? "border-brass opacity-100" : "border-hairline opacity-40 hover:opacity-90"
               }`}
             >
-              <img src={book.cover} alt="" className="h-full w-full object-cover" />
+              <img loading="lazy" decoding="async" src={book.cover} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

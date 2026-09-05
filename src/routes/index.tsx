@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { instrumentSerif } from "@/lib/fonts"
 import Navbar from "@/components/navbar"
 import AboutMe from "@/components/about-me"
@@ -10,11 +10,10 @@ import Bookery from "@/components/bookery"
 import Grind from "@/components/grind"
 import Link from "@/components/app-link"
 import { loadPosts } from "@/lib/blogs"
-import { applyHeroTheme, extractHeroTheme, heroThemes, type HeroTheme } from "@/lib/hero-themes"
 import { socialLinks } from "@/config"
 
 export const Route = createFileRoute("/")({
-  loader: () => loadPosts(),
+  loader: () => loadPosts("home"),
   head: () => ({
     meta: [
       { title: "Hanzalah Waheed | Software Developer" },
@@ -55,12 +54,6 @@ export const Route = createFileRoute("/")({
   component: Home,
 })
 
-const heroBackgrounds = [
-  "/images/aurora-forest.jpg",
-  "/images/image copy 2.png",
-  "/images/image copy 4.png",
-]
-
 function Home() {
   const { posts, error: postsError } = Route.useLoaderData()
 
@@ -69,45 +62,7 @@ function Home() {
   // and getFullYear() returns 1970.
   const currentYear = new Date().getFullYear()
 
-  // Cycle through the hero backgrounds in a fixed order, advancing once per
-  // page load (stored in localStorage). Done in an effect (rather than during
-  // render) so the server and initial client render agree.
-  const [heroIndex, setHeroIndex] = useState(0)
-  const [extractedThemes, setExtractedThemes] = useState<Record<string, HeroTheme>>({})
   const heroBgRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const stored = Number(localStorage.getItem("hero-bg-index")) || 0
-    const index = stored % heroBackgrounds.length
-    setHeroIndex(index)
-    localStorage.setItem("hero-bg-index", String((index + 1) % heroBackgrounds.length))
-
-    // Warm the browser cache for every background, so future refreshes swap
-    // instantly instead of re-fetching from the CDN.
-    heroBackgrounds.forEach(src => {
-      const img = new Image()
-      img.src = src
-    })
-  }, [])
-
-  // Extract a palette from each background once, so themes are exact.
-  useEffect(() => {
-    let cancelled = false
-    heroBackgrounds.forEach(async src => {
-      const theme = await extractHeroTheme(src)
-      if (theme && !cancelled) setExtractedThemes(prev => ({ ...prev, [src]: theme }))
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  // Theme the page to match the active background. Falls back to the
-  // pre-extracted palette until runtime extraction finishes.
-  useEffect(() => {
-    const src = heroBackgrounds[heroIndex]
-    applyHeroTheme(extractedThemes[src] ?? heroThemes[src])
-  }, [heroIndex, extractedThemes])
 
   // Slow parallax: drift the hero background at ~0.15x scroll so it lags behind
   // the page, making the story section feel like scrolling deeper into the same
@@ -142,7 +97,7 @@ function Home() {
     "@type": "Person",
     name: "Hanzalah Waheed",
     url: siteUrl,
-    image: `${siteUrl}/images/pfp.jpeg`,
+    image: `${siteUrl}/images/pfp.webp`,
     sameAs: [socialLinks.github, socialLinks.twitter, socialLinks.linkedin],
     jobTitle: "Software Developer (AI & Applied AI)",
   }
@@ -169,21 +124,13 @@ function Home() {
       />
       <Navbar />
       <section className="relative h-screen w-full overflow-hidden bg-black">
-        {/* Parallax background layer — oversized (130%) so the drift never exposes an edge.
-            All backgrounds render stacked; the active one fades in. */}
-        <div ref={heroBgRef} className="absolute -top-[15%] left-0 h-[130%] w-full will-change-transform">
-          {heroBackgrounds.map((src, index) => (
-            <div
-              key={src}
-              className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
-                index === heroIndex ? "opacity-100" : "opacity-0"
-              }`}
-              style={{ backgroundImage: `url('${src}')` }}
-            />
-          ))}
-        </div>
+        <div
+          ref={heroBgRef}
+          className="hero-background absolute -top-[15%] left-0 h-[130%] w-full bg-cover bg-center bg-no-repeat will-change-transform"
+          aria-hidden="true"
+        />
         {/* Bottom fade: dissolve the image into the ink story section below */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-ink" />
+        <div className="to-ink pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent" />
         <div className="absolute top-[45%] left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center">
           <h1 className={`${instrumentSerif.className} text-glow text-5xl text-white md:text-7xl lg:text-8xl`}>
             Hanzalah Waheed
@@ -209,13 +156,13 @@ function Home() {
       </div>
       <Grind />
       <footer
-        className={`flex h-56 flex-col items-center justify-center gap-3 border-t border-hairline bg-ink ${instrumentSerif.className}`}
+        className={`border-hairline bg-ink flex h-56 flex-col items-center justify-center gap-3 border-t ${instrumentSerif.className}`}
       >
-        <p className="text-lg text-paper-dim">Design and Development by Hanzalah Waheed</p>
-        <p className="font-ui text-[0.65rem] tracking-[0.3em] text-faint uppercase">&copy; {currentYear}</p>
+        <p className="text-paper-dim text-lg">Design and Development by Hanzalah Waheed</p>
+        <p className="font-ui text-faint text-[0.65rem] tracking-[0.3em] uppercase">&copy; {currentYear}</p>
         <Link
           href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          className="font-ui text-[0.65rem] tracking-[0.25em] text-faint uppercase transition-colors hover:text-brass"
+          className="font-ui text-faint hover:text-brass text-[0.65rem] tracking-[0.25em] uppercase transition-colors"
           target="_blank"
         >
           Do not Click

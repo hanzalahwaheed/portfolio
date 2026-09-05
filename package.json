@@ -48,7 +48,6 @@
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.544.0",
     "nitro": "npm:nitro-nightly@latest",
-    "node-vibrant": "^4.0.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-github-calendar": "^4.5.10",

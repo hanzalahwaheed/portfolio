@@ -5,7 +5,7 @@ import Image from "@/components/app-image"
 import Link from "@/components/app-link"
 import Reveal from "@/components/reveal"
 import { ArrowUpRight, ChevronRight } from "lucide-react"
-import type { BlogPost as Post } from "@/lib/blogs"
+import type { BlogPostSummary as Post } from "@/lib/blogs"
 import { format } from "date-fns"
 import { instrumentSerif } from "@/lib/fonts"
 
@@ -19,16 +19,8 @@ type Article = {
   slug: string
 }
 
-// Helper function to estimate read time from content
-const estimateReadTime = (content: string): string => {
-  const wordsPerMinute = 200
-  const wordCount = content.split(/\s+/).length
-  const minutes = Math.ceil(wordCount / wordsPerMinute)
-  return `${minutes} min`
-}
-
 const mapPostsToArticles = (posts: Post[]): Article[] => {
-  const defaultImage = "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=2067&auto=format&fit=crop"
+  const defaultImage = "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=320&auto=format&fit=crop"
 
   return posts.map(post => {
     const date = post.publishedAt
@@ -40,7 +32,7 @@ const mapPostsToArticles = (posts: Post[]): Article[] => {
       title: post.title,
       excerpt: post.excerpt,
       date,
-      readTime: estimateReadTime(post.content),
+      readTime: post.readTime,
       image: post.coverImage || defaultImage,
       slug: post.slug,
     }
@@ -51,7 +43,7 @@ const BlogRow = ({ article }: { article: Article }) => {
   return (
     <Link
       href={`/blogs/${article.slug}`}
-      className="group relative block border-t border-hairline transition-colors last:border-b hover:bg-paper/[0.02]"
+      className="group border-hairline hover:bg-paper/[0.02] relative block border-t transition-colors last:border-b"
     >
       <div className="flex items-center gap-5 px-2 py-7 md:gap-6">
         {/* Thumbnail */}
@@ -66,27 +58,27 @@ const BlogRow = ({ article }: { article: Article }) => {
 
         {/* Body */}
         <div className="min-w-0 flex-1">
-          <div className="font-ui mb-2 flex items-center gap-3 text-[0.65rem] tracking-[0.25em] text-faint uppercase">
+          <div className="font-ui text-faint mb-2 flex items-center gap-3 text-[0.65rem] tracking-[0.25em] uppercase">
             <span className="text-brass">{article.date}</span>
-            <span className="h-px w-4 bg-hairline" />
+            <span className="bg-hairline h-px w-4" />
             <span>{article.readTime} read</span>
           </div>
 
           <h3
-            className={`${instrumentSerif.className} truncate text-2xl leading-tight text-paper transition-colors duration-300 group-hover:text-brass md:text-3xl`}
+            className={`${instrumentSerif.className} text-paper group-hover:text-brass truncate text-2xl leading-tight transition-colors duration-300 md:text-3xl`}
           >
             {article.title}
           </h3>
 
           {article.excerpt && (
-            <p className="mt-1 line-clamp-1 font-light text-faint md:line-clamp-2">{article.excerpt}</p>
+            <p className="text-faint mt-1 line-clamp-1 font-light md:line-clamp-2">{article.excerpt}</p>
           )}
         </div>
 
         {/* Arrow */}
         <ArrowUpRight
           size={22}
-          className="flex-shrink-0 text-faint transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-brass"
+          className="text-faint group-hover:text-brass flex-shrink-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         />
       </div>
     </Link>
@@ -98,23 +90,21 @@ const Blogs = ({ posts, error = false }: { posts: Post[]; error?: boolean }) => 
   const displayArticles = articles.slice(0, 5)
 
   return (
-    <section className="w-full bg-ink px-4 py-24 text-paper">
+    <section className="bg-ink text-paper w-full px-4 py-24">
       <div className="mx-auto w-full max-w-3xl">
         {/* Section Header */}
         <Reveal>
           <header className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <h2 className={`${instrumentSerif.className} text-4xl leading-none text-paper md:text-5xl`}>
-                writing
-              </h2>
-              <p className="mt-4 max-w-md font-light text-paper-dim">
+              <h2 className={`${instrumentSerif.className} text-paper text-4xl leading-none md:text-5xl`}>writing</h2>
+              <p className="text-paper-dim mt-4 max-w-md font-light">
                 I mostly write about tech and some personal thoughts on stuff I read.
               </p>
             </div>
 
             <Link
               href="/blogs"
-              className="font-ui group flex items-center gap-1.5 border-b border-transparent pb-1 text-[0.7rem] tracking-[0.25em] text-brass uppercase transition-colors hover:border-brass hover:text-paper"
+              className="font-ui group text-brass hover:border-brass hover:text-paper flex items-center gap-1.5 border-b border-transparent pb-1 text-[0.7rem] tracking-[0.25em] uppercase transition-colors"
             >
               View all
               <ChevronRight size={14} className="transition-transform group-hover:translate-x-1" />
@@ -124,15 +114,15 @@ const Blogs = ({ posts, error = false }: { posts: Post[]; error?: boolean }) => 
 
         {/* The List */}
         {error ? (
-          <div className="flex items-center justify-center border-y border-hairline py-20">
-            <p className="font-light text-faint">Couldn&apos;t load posts right now — try again in a bit.</p>
+          <div className="border-hairline flex items-center justify-center border-y py-20">
+            <p className="text-faint font-light">Couldn&apos;t load posts right now — try again in a bit.</p>
           </div>
         ) : articles.length === 0 ? (
           <div className="flex items-center justify-center py-20">
-            <p className="font-light text-faint">No posts available yet.</p>
+            <p className="text-faint font-light">No posts available yet.</p>
           </div>
         ) : (
-          <div className="border-b border-hairline">
+          <div className="border-hairline border-b">
             {displayArticles.map((article, i) => (
               <Reveal key={article.id} delay={i * 60}>
                 <BlogRow article={article} />

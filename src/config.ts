@@ -1,3 +1,5 @@
+import type { TechIconName } from "@/components/icons/tech-icon-data"
+
 export const personalDetails = {
   githubUsername: "hanzalahwaheed",
 }
@@ -217,3 +219,51 @@ export const books: Book[] = [
 ]
 
 export const bookCategories = ["All", "Non-Fiction", "Tech", "Fiction"]
+
+export type TechGroup = {
+  label: string
+  items: { name: string; icon: TechIconName }[]
+}
+
+export const techGroups: TechGroup[] = [
+  {
+    label: "Languages",
+    items: [
+      { name: "TypeScript", icon: "typescript" },
+      { name: "JavaScript", icon: "javascript" },
+      { name: "Python", icon: "python" },
+      { name: "HTML", icon: "html5" },
+      { name: "CSS", icon: "css" },
+    ],
+  },
+  {
+    label: "Frontend",
+    items: [
+      { name: "React", icon: "react" },
+      { name: "Next.js", icon: "nextdotjs" },
+      { name: "Tailwind", icon: "tailwindCss" },
+      { name: "shadcn/ui", icon: "shadcnUi" },
+      { name: "TanStack", icon: "tanstack" },
+    ],
+  },
+  {
+    label: "Backend & data",
+    items: [
+      { name: "Node.js", icon: "nodedotjs" },
+      { name: "PostgreSQL", icon: "postgresql" },
+      { name: "MongoDB", icon: "mongodb" },
+      { name: "Drizzle", icon: "drizzle" },
+      { name: "tRPC", icon: "trpc" },
+      { name: "Zod", icon: "zod" },
+    ],
+  },
+  {
+    label: "Infra & tooling",
+    items: [
+      { name: "AWS", icon: "aws" },
+      { name: "Docker", icon: "docker" },
+      { name: "Git", icon: "git" },
+      { name: "Claude Code", icon: "claudeCode" },
+    ],
+  },
+]

@@ -1,7 +1,7 @@
 import Image from "@/components/app-image"
 import Reveal from "@/components/reveal"
 import SectionHeading from "@/components/section-heading"
-import { FlowingCarouselTechStack } from "./flowing-carousel-tech-stack"
+import { ToolsOfTheTrade } from "./tools-of-the-trade"
 import { MyBuilds } from "./my-builds"
 import { MyWork } from "./my-work"
 import Link from "@/components/app-link"
@@ -27,7 +27,7 @@ const AboutMe = () => {
                 {/* Arch frame — editorial portrait treatment */}
                 <div className="border-hairline w-48 overflow-hidden rounded-t-full border p-2 sm:w-52">
                   <Image
-                    src="/images/pfp.jpeg"
+                    src="/images/pfp.webp"
                     alt="Hanzalah Waheed"
                     width={250}
                     height={250}
@@ -68,7 +68,7 @@ const AboutMe = () => {
           <Reveal>
             <div className="mt-24">
               <SectionHeading title="tools of the trade" />
-              <FlowingCarouselTechStack />
+              <ToolsOfTheTrade />
             </div>
           </Reveal>
         </div>

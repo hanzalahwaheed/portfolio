@@ -3,6 +3,7 @@ import { redirect } from "@tanstack/react-router"
 import { desc, eq } from "drizzle-orm"
 import { uuidv7 } from "uuidv7"
 import { db, posts, type Post } from "@/db"
+import { calculateReadTime } from "@/lib/blog-utils"
 import { cacheRequest, deleteCachedRequests, getCachedJson, putCachedJson } from "@/lib/cache"
 
 export interface BlogPost {
@@ -18,6 +19,8 @@ export interface BlogPost {
   createdAt: string
   updatedAt: string
 }
+
+export type BlogPostSummary = Omit<BlogPost, "content" | "readTime"> & { readTime: string }
 
 function serializePost(post: Post): BlogPost {
   return {
@@ -35,12 +38,13 @@ function readPostFormData(formData: FormData) {
     content: formData.get("content") as string,
     excerpt: (formData.get("excerpt") as string) || null,
     coverImage: (formData.get("coverImage") as string) || null,
-    readTime: (formData.get("readTime") as string) || null,
+    readTime: (formData.get("readTime") as string) || calculateReadTime((formData.get("content") as string) || ""),
     published: formData.get("published") === "on",
   }
 }
 
-const postsCacheKey = cacheRequest("/cache/blogs")
+const postsCacheKey = cacheRequest("/cache/blog-summaries/v1")
+const homePostsCacheKey = cacheRequest("/cache/blog-summaries/v1/home")
 const publicPostsMaxAge = 60
 const publicPostMaxAge = 300
 
@@ -50,26 +54,33 @@ function postCacheKey(slug: string) {
 
 async function clearPublicPostCache(slugs: Array<string | null | undefined> = []) {
   const uniqueSlugs = [...new Set(slugs.filter((slug): slug is string => Boolean(slug)))]
-  await deleteCachedRequests([postsCacheKey, ...uniqueSlugs.map(postCacheKey)])
+  await deleteCachedRequests([postsCacheKey, homePostsCacheKey, ...uniqueSlugs.map(postCacheKey)])
 }
 
-export const getPosts = createServerFn({ method: "GET" }).handler(async () => {
-  const cached = await getCachedJson<BlogPost[]>(postsCacheKey)
-  if (cached !== undefined) return cached
+export const getPosts = createServerFn({ method: "GET" })
+  .inputValidator((view: "home" | "all" | undefined) => (view === "home" ? "home" : "all"))
+  .handler(async ({ data: view }) => {
+    const request = view === "home" ? homePostsCacheKey : postsCacheKey
+    const cached = await getCachedJson<BlogPostSummary[]>(request)
+    if (cached !== undefined) return cached
 
-  const result = await db.select().from(posts).where(eq(posts.published, true)).orderBy(desc(posts.createdAt))
-  const serializedPosts = result.map(serializePost)
-  await putCachedJson(postsCacheKey, serializedPosts, publicPostsMaxAge)
-  return serializedPosts
-})
+    const query = db.select().from(posts).where(eq(posts.published, true)).orderBy(desc(posts.createdAt))
+    const result = await (view === "home" ? query.limit(5) : query)
+    const summaries = result.map(post => {
+      const { content, ...summary } = serializePost(post)
+      return { ...summary, readTime: summary.readTime || calculateReadTime(content) }
+    })
+    await putCachedJson(request, summaries, publicPostsMaxAge)
+    return summaries
+  })
 
-export type PostsResult = { posts: BlogPost[]; error: false } | { posts: null; error: true }
+export type PostsResult = { posts: BlogPostSummary[]; error: false } | { posts: null; error: true }
 
 // Loader-safe wrapper: a DB outage should degrade the blogs section, not take
 // down the whole page that embeds it.
-export async function loadPosts(): Promise<PostsResult> {
+export async function loadPosts(view: "home" | "all" = "all"): Promise<PostsResult> {
   try {
-    return { posts: await getPosts(), error: false }
+    return { posts: await getPosts({ data: view }), error: false }
   } catch (error) {
     console.error("Failed to load blog posts", error)
     return { posts: null, error: true }

@@ -1,6 +1,6 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
 import appCss from "../styles.css?url"
-import { googleSans } from "@/lib/fonts"
+import { heroInitScript, heroStyles } from "@/lib/hero-themes"
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,11 +18,13 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: heroInitScript }} />
         <HeadContent />
+        <style dangerouslySetInnerHTML={{ __html: heroStyles }} />
       </head>
-      <body className={`font-sans antialiased ${googleSans.variable}`}>
+      <body className="font-sans antialiased">
         {children}
         <Scripts />
       </body>

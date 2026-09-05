@@ -15,7 +15,17 @@ export async function handleApiResponse<T>(response: Response): Promise<T> {
     try {
       const errorData = await response.json()
       // Try multiple common error field names
-      errorMessage = errorData.error || errorData.message || errorData.detail || errorMessage
+      if (errorData && typeof errorData === "object") {
+        for (const key of ["error", "message", "detail"] as const) {
+          if (key in errorData) {
+            const value: unknown = (errorData as Record<string, unknown>)[key]
+            if (typeof value === "string" && value) {
+              errorMessage = value
+              break
+            }
+          }
+        }
+      }
     } catch {
       // If JSON parsing fails, use status text as fallback
       errorMessage = response.statusText || errorMessage

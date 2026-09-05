@@ -52,7 +52,13 @@ function BlogIndexPage() {
     <div className="relative min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="pointer-events-none fixed inset-0 z-[-1]">
-        <Image src="/images/image copy 3.png" alt="Background" fill className="object-cover opacity-20 dark:opacity-90" />
+        <Image
+          src="/images/image copy 3.png"
+          alt="Background"
+          priority
+          fill
+          className="object-cover opacity-20 dark:opacity-90"
+        />
       </div>
 
       <div className="relative z-10 container mx-auto max-w-3xl px-6 py-16 md:py-24 lg:max-w-4xl">
