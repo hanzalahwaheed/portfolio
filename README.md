@@ -65,6 +65,12 @@ This portfolio is designed to be easily customizable. You can update your person
 
 Simply edit the exports in `src/config.ts` and the changes will reflect across the site.
 
+### Microsoft Clarity
+
+Production builds load `@microsoft/clarity` in the browser after the page hydrates.
+The project ID is `yrxxrmd7uv`, configured in `src/routes/__root.tsx`.
+Clarity is disabled during `npm run dev`.
+
 ## 🎨 Inspiration
 
 The design and aesthetic of this portfolio are heavily inspired by the atmosphere and visual style of **Hollow Knight**. The dark themes and subtle interactions aim to capture a similar mood.

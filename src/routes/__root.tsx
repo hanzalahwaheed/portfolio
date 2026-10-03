@@ -1,4 +1,5 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router"
+import { useEffect } from "react"
 import appCss from "../styles.css?url"
 import { heroInitScript, heroStyles } from "@/lib/hero-themes"
 
@@ -17,6 +18,14 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if (!import.meta.env.PROD) return
+
+    import("@microsoft/clarity")
+      .then(({ default: Clarity }) => Clarity.init("yrxxrmd7uv"))
+      .catch(error => console.warn("Clarity could not load", error))
+  }, [])
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
