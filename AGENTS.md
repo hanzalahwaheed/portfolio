@@ -44,7 +44,7 @@ Two kinds of route files:
 
 Server-only logic lives in `src/lib/*.ts` as `createServerFn({ method })` definitions (see `src/lib/blogs.ts`). Conventions:
 
-- Validate input with `.inputValidator(...)`, implement in `.handler(async ({ data }) => ...)`.
+- Validate input with `.validator(...)`, implement in `.handler(async ({ data }) => ...)`.
 - Server fns can be called from loaders (SSR) or client code; they always run on the server.
 - Blog create and update clear caches then `throw redirect({ to: "/admin" })`; delete returns `{ ok: true }`, and its caller invalidates the router.
 

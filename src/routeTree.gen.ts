@@ -9,64 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TwitterImageRouteImport } from './routes/twitter-image'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as ResumeInRouteImport } from './routes/resume-in'
-import { Route as ResumeRouteImport } from './routes/resume'
-import { Route as OpengraphImageRouteImport } from './routes/opengraph-image'
-import { Route as CvRouteImport } from './routes/cv'
-import { Route as BlogsRouteImport } from './routes/blogs'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BlogsRouteImport } from './routes/blogs'
+import { Route as CvRouteImport } from './routes/cv'
+import { Route as OpengraphImageRouteImport } from './routes/opengraph-image'
+import { Route as ResumeRouteImport } from './routes/resume'
+import { Route as ResumeInRouteImport } from './routes/resume-in'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TwitterImageRouteImport } from './routes/twitter-image'
+import { Route as AdminNewRouteImport } from './routes/admin.new'
+import { Route as ApiGithubContributionsRouteImport } from './routes/api.github-contributions'
+import { Route as ApiGithubLatestContributionsRouteImport } from './routes/api.github-latest-contributions'
+import { Route as ApiUploadRouteImport } from './routes/api.upload'
 import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as BlogsSlugRouteImport } from './routes/blogs.$slug'
-import { Route as ApiUploadRouteImport } from './routes/api.upload'
-import { Route as ApiGithubLatestContributionsRouteImport } from './routes/api.github-latest-contributions'
-import { Route as ApiGithubContributionsRouteImport } from './routes/api.github-contributions'
-import { Route as AdminNewRouteImport } from './routes/admin.new'
-import { Route as BlogsSlugTwitterImageRouteImport } from './routes/blogs.$slug.twitter-image'
-import { Route as BlogsSlugOpengraphImageRouteImport } from './routes/blogs.$slug.opengraph-image'
 import { Route as AdminEditIdRouteImport } from './routes/admin.edit.$id'
+import { Route as BlogsSlugOpengraphImageRouteImport } from './routes/blogs.$slug.opengraph-image'
+import { Route as BlogsSlugTwitterImageRouteImport } from './routes/blogs.$slug.twitter-image'
 
-const TwitterImageRoute = TwitterImageRouteImport.update({
-  id: '/twitter-image',
-  path: '/twitter-image',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResumeInRoute = ResumeInRouteImport.update({
-  id: '/resume-in',
-  path: '/resume-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResumeRoute = ResumeRouteImport.update({
-  id: '/resume',
-  path: '/resume',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OpengraphImageRoute = OpengraphImageRouteImport.update({
-  id: '/opengraph-image',
-  path: '/opengraph-image',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CvRoute = CvRouteImport.update({
-  id: '/cv',
-  path: '/cv',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogsRoute = BlogsRouteImport.update({
-  id: '/blogs',
-  path: '/blogs',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -74,9 +39,65 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CvRoute = CvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpengraphImageRoute = OpengraphImageRouteImport.update({
+  id: '/opengraph-image',
+  path: '/opengraph-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumeRoute = ResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumeInRoute = ResumeInRouteImport.update({
+  id: '/resume-in',
+  path: '/resume-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TwitterImageRoute = TwitterImageRouteImport.update({
+  id: '/twitter-image',
+  path: '/twitter-image',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminNewRoute = AdminNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiGithubContributionsRoute = ApiGithubContributionsRouteImport.update({
+  id: '/api/github-contributions',
+  path: '/api/github-contributions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGithubLatestContributionsRoute =
+  ApiGithubLatestContributionsRouteImport.update({
+    id: '/api/github-latest-contributions',
+    path: '/api/github-latest-contributions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogsIndexRoute = BlogsIndexRouteImport.update({
@@ -89,41 +110,20 @@ const BlogsSlugRoute = BlogsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogsRoute,
 } as any)
-const ApiUploadRoute = ApiUploadRouteImport.update({
-  id: '/api/upload',
-  path: '/api/upload',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiGithubLatestContributionsRoute =
-  ApiGithubLatestContributionsRouteImport.update({
-    id: '/api/github-latest-contributions',
-    path: '/api/github-latest-contributions',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiGithubContributionsRoute = ApiGithubContributionsRouteImport.update({
-  id: '/api/github-contributions',
-  path: '/api/github-contributions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminNewRoute = AdminNewRouteImport.update({
-  id: '/new',
-  path: '/new',
+const AdminEditIdRoute = AdminEditIdRouteImport.update({
+  id: '/edit/$id',
+  path: '/edit/$id',
   getParentRoute: () => AdminRoute,
-} as any)
-const BlogsSlugTwitterImageRoute = BlogsSlugTwitterImageRouteImport.update({
-  id: '/twitter-image',
-  path: '/twitter-image',
-  getParentRoute: () => BlogsSlugRoute,
 } as any)
 const BlogsSlugOpengraphImageRoute = BlogsSlugOpengraphImageRouteImport.update({
   id: '/opengraph-image',
   path: '/opengraph-image',
   getParentRoute: () => BlogsSlugRoute,
 } as any)
-const AdminEditIdRoute = AdminEditIdRouteImport.update({
-  id: '/edit/$id',
-  path: '/edit/$id',
-  getParentRoute: () => AdminRoute,
+const BlogsSlugTwitterImageRoute = BlogsSlugTwitterImageRouteImport.update({
+  id: '/twitter-image',
+  path: '/twitter-image',
+  getParentRoute: () => BlogsSlugRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -272,60 +272,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/twitter-image': {
-      id: '/twitter-image'
-      path: '/twitter-image'
-      fullPath: '/twitter-image'
-      preLoaderRoute: typeof TwitterImageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resume-in': {
-      id: '/resume-in'
-      path: '/resume-in'
-      fullPath: '/resume-in'
-      preLoaderRoute: typeof ResumeInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resume': {
-      id: '/resume'
-      path: '/resume'
-      fullPath: '/resume'
-      preLoaderRoute: typeof ResumeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/opengraph-image': {
-      id: '/opengraph-image'
-      path: '/opengraph-image'
-      fullPath: '/opengraph-image'
-      preLoaderRoute: typeof OpengraphImageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cv': {
-      id: '/cv'
-      path: '/cv'
-      fullPath: '/cv'
-      preLoaderRoute: typeof CvRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blogs': {
-      id: '/blogs'
-      path: '/blogs'
-      fullPath: '/blogs'
-      preLoaderRoute: typeof BlogsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -335,11 +286,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cv': {
+      id: '/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof CvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opengraph-image': {
+      id: '/opengraph-image'
+      path: '/opengraph-image'
+      fullPath: '/opengraph-image'
+      preLoaderRoute: typeof OpengraphImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resume': {
+      id: '/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resume-in': {
+      id: '/resume-in'
+      path: '/resume-in'
+      fullPath: '/resume-in'
+      preLoaderRoute: typeof ResumeInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/twitter-image': {
+      id: '/twitter-image'
+      path: '/twitter-image'
+      fullPath: '/twitter-image'
+      preLoaderRoute: typeof TwitterImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/new': {
+      id: '/admin/new'
+      path: '/new'
+      fullPath: '/admin/new'
+      preLoaderRoute: typeof AdminNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/github-contributions': {
+      id: '/api/github-contributions'
+      path: '/api/github-contributions'
+      fullPath: '/api/github-contributions'
+      preLoaderRoute: typeof ApiGithubContributionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/github-latest-contributions': {
+      id: '/api/github-latest-contributions'
+      path: '/api/github-latest-contributions'
+      fullPath: '/api/github-latest-contributions'
+      preLoaderRoute: typeof ApiGithubLatestContributionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs/': {
@@ -356,40 +384,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsSlugRouteImport
       parentRoute: typeof BlogsRoute
     }
-    '/api/upload': {
-      id: '/api/upload'
-      path: '/api/upload'
-      fullPath: '/api/upload'
-      preLoaderRoute: typeof ApiUploadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/github-latest-contributions': {
-      id: '/api/github-latest-contributions'
-      path: '/api/github-latest-contributions'
-      fullPath: '/api/github-latest-contributions'
-      preLoaderRoute: typeof ApiGithubLatestContributionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/github-contributions': {
-      id: '/api/github-contributions'
-      path: '/api/github-contributions'
-      fullPath: '/api/github-contributions'
-      preLoaderRoute: typeof ApiGithubContributionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/new': {
-      id: '/admin/new'
-      path: '/new'
-      fullPath: '/admin/new'
-      preLoaderRoute: typeof AdminNewRouteImport
+    '/admin/edit/$id': {
+      id: '/admin/edit/$id'
+      path: '/edit/$id'
+      fullPath: '/admin/edit/$id'
+      preLoaderRoute: typeof AdminEditIdRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/blogs/$slug/twitter-image': {
-      id: '/blogs/$slug/twitter-image'
-      path: '/twitter-image'
-      fullPath: '/blogs/$slug/twitter-image'
-      preLoaderRoute: typeof BlogsSlugTwitterImageRouteImport
-      parentRoute: typeof BlogsSlugRoute
     }
     '/blogs/$slug/opengraph-image': {
       id: '/blogs/$slug/opengraph-image'
@@ -398,12 +398,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogsSlugOpengraphImageRouteImport
       parentRoute: typeof BlogsSlugRoute
     }
-    '/admin/edit/$id': {
-      id: '/admin/edit/$id'
-      path: '/edit/$id'
-      fullPath: '/admin/edit/$id'
-      preLoaderRoute: typeof AdminEditIdRouteImport
-      parentRoute: typeof AdminRoute
+    '/blogs/$slug/twitter-image': {
+      id: '/blogs/$slug/twitter-image'
+      path: '/twitter-image'
+      fullPath: '/blogs/$slug/twitter-image'
+      preLoaderRoute: typeof BlogsSlugTwitterImageRouteImport
+      parentRoute: typeof BlogsSlugRoute
     }
   }
 }
