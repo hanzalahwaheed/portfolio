@@ -88,17 +88,6 @@ export interface WorkExperience {
 
 export const workExperiences: WorkExperience[] = [
   {
-    company: "C2SI",
-    companyUrl: "https://github.com/c2siorg/dataloom",
-    role: "Google Summer of Code 2026 Contributor",
-    duration: "Jun 2026 – Aug 2026",
-    description:
-      "I build DataLoom, an open-source, browser-based data wrangling tool, for the Ceylon Computer Science Institute. I started by setting up the transformation and feature registries the app now extends through, which made every later feature cheap to add: multi-format ingest (TSV, JSON, XLSX, Parquet), data profiling, quality assessment, charts, formula columns, reusable transformation pipelines, and a tabbed workspace layout. I also co-authored the authentication layer and am migrating the frontend to TypeScript.",
-    techStack: ["Python", "FastAPI", "pandas", "PostgreSQL", "React", "TypeScript", "Docker"],
-    logo: "/images/gsoc.png",
-    logoAlt: "Google Summer of Code",
-  },
-  {
     company: "StockInsights AI",
     companyUrl: "https://www.stockinsights.ai",
     role: "Founding Software Engineer",
@@ -108,6 +97,17 @@ export const workExperiences: WorkExperience[] = [
     techStack: ["Python", "TypeScript", "Next.js", "PostgreSQL", "pgvector", "AWS", "Docker"],
     logo: "/images/stockinsights.svg",
     logoAlt: "StockInsights AI",
+  },
+  {
+    company: "C2SI",
+    companyUrl: "https://github.com/c2siorg/dataloom",
+    role: "Google Summer of Code 2026 Contributor",
+    duration: "Jun 2026 – Aug 2026",
+    description:
+      "I build DataLoom, an open-source, browser-based data wrangling tool, for the Ceylon Computer Science Institute. I started by setting up the transformation and feature registries the app now extends through, which made every later feature cheap to add: multi-format ingest (TSV, JSON, XLSX, Parquet), data profiling, quality assessment, charts, formula columns, reusable transformation pipelines, and a tabbed workspace layout. I also co-authored the authentication layer and am migrating the frontend to TypeScript.",
+    techStack: ["Python", "FastAPI", "pandas", "PostgreSQL", "React", "TypeScript", "Docker"],
+    logo: "/images/gsoc.png",
+    logoAlt: "Google Summer of Code",
   },
 ]
 
