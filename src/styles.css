@@ -87,6 +87,11 @@ body::after {
   color: var(--cream);
 }
 
+[data-blog-theme="light"] ::selection {
+  background: color-mix(in srgb, var(--color-deep-teal) 22%, transparent);
+  color: var(--ink);
+}
+
 .text-glow {
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.8) !important;
 }

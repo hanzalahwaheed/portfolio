@@ -83,9 +83,10 @@ export function MinimalBlogContent({ post }: MinimalBlogContentProps) {
 
   return (
     <div
+      data-blog-theme={isDark ? "dark" : "light"}
       className={`min-h-screen transition-colors duration-300 ${
         isDark ? "bg-neutral-950 text-neutral-200" : "bg-white text-neutral-800"
-      } selection:bg-white selection:text-black dark:selection:bg-white dark:selection:text-black`}
+      }`}
     >
       {/* Reading Progress Bar */}
       <div
