@@ -58,7 +58,7 @@ async function clearPublicPostCache(slugs: Array<string | null | undefined> = []
 }
 
 export const getPosts = createServerFn({ method: "GET" })
-  .inputValidator((view: "home" | "all" | undefined) => (view === "home" ? "home" : "all"))
+  .validator((view: "home" | "all" | undefined) => (view === "home" ? "home" : "all"))
   .handler(async ({ data: view }) => {
     const request = view === "home" ? homePostsCacheKey : postsCacheKey
     const cached = await getCachedJson<BlogPostSummary[]>(request)
@@ -88,7 +88,7 @@ export async function loadPosts(view: "home" | "all" = "all"): Promise<PostsResu
 }
 
 export const getPost = createServerFn({ method: "GET" })
-  .inputValidator((data: { slug: string }) => data)
+  .validator((data: { slug: string }) => data)
   .handler(async ({ data }) => {
     const request = postCacheKey(data.slug)
     const cached = await getCachedJson<BlogPost | null>(request)
@@ -108,7 +108,7 @@ export const getAllPostsAdmin = createServerFn({ method: "GET" }).handler(async 
 })
 
 export const getPostAdmin = createServerFn({ method: "GET" })
-  .inputValidator((data: { id: string }) => data)
+  .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     const { requireAdmin } = await import("@/lib/admin-auth.server")
     requireAdmin()
@@ -117,7 +117,7 @@ export const getPostAdmin = createServerFn({ method: "GET" })
   })
 
 export const createPost = createServerFn({ method: "POST" })
-  .inputValidator((data: FormData) => data)
+  .validator((data: FormData) => data)
   .handler(async ({ data }) => {
     const { requireAdminForMutation } = await import("@/lib/admin-auth.server")
     requireAdminForMutation()
@@ -140,7 +140,7 @@ export const createPost = createServerFn({ method: "POST" })
   })
 
 export const updatePost = createServerFn({ method: "POST" })
-  .inputValidator((data: FormData) => data)
+  .validator((data: FormData) => data)
   .handler(async ({ data }) => {
     const { requireAdminForMutation } = await import("@/lib/admin-auth.server")
     requireAdminForMutation()
@@ -167,7 +167,7 @@ export const updatePost = createServerFn({ method: "POST" })
   })
 
 export const deletePost = createServerFn({ method: "POST" })
-  .inputValidator((data: { id: string }) => data)
+  .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     const { requireAdminForMutation } = await import("@/lib/admin-auth.server")
     requireAdminForMutation()
