@@ -49,7 +49,7 @@ const MarkdownBody = memo(function MarkdownBody({ content, isDark }: { content: 
           </h4>
         ),
         p: ({ children }) => (
-          <p className="mb-8 text-lg leading-relaxed font-light antialiased md:text-xl">{children}</p>
+          <p className="mb-8 text-lg leading-relaxed font-normal antialiased md:text-xl">{children}</p>
         ),
         blockquote: ({ children }) => (
           <blockquote
@@ -62,11 +62,11 @@ const MarkdownBody = memo(function MarkdownBody({ content, isDark }: { content: 
             {children}
           </blockquote>
         ),
-        ul: ({ children }) => <ul className="my-6 ml-6 list-disc space-y-4 font-light">{children}</ul>,
-        ol: ({ children }) => <ol className="my-6 ml-6 list-decimal space-y-4 font-light">{children}</ol>,
+        ul: ({ children }) => <ul className="my-6 ml-6 list-disc space-y-4 font-normal">{children}</ul>,
+        ol: ({ children }) => <ol className="my-6 ml-6 list-decimal space-y-4 font-normal">{children}</ol>,
         li: ({ children }) => (
           <li
-            className={`text-lg leading-relaxed font-light md:text-xl ${isDark ? "text-neutral-300 marker:text-[#66acb6]" : "text-neutral-700 marker:text-[#0B5964]"}`}
+            className={`text-lg leading-relaxed font-normal md:text-xl ${isDark ? "text-neutral-300 marker:text-[#66acb6]" : "text-neutral-700 marker:text-[#0B5964]"}`}
           >
             {children}
           </li>
