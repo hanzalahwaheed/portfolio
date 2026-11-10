@@ -10,7 +10,7 @@ import { workExperiences, personalDetails, WorkExperience } from "../config"
 
 const WorkEntry = ({ experience }: { experience: WorkExperience }) => (
   <Reveal>
-    <article className="group grid gap-3 border-t border-hairline py-10 sm:grid-cols-[9rem_1fr] sm:gap-8">
+    <article className="group border-hairline grid gap-3 border-t py-10 sm:grid-cols-[9rem_1fr] sm:gap-8">
       <div className="flex flex-col gap-4 pt-1.5">
         {experience.logo && (
           <Image
@@ -21,23 +21,23 @@ const WorkEntry = ({ experience }: { experience: WorkExperience }) => (
             className="h-10 w-10 object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
           />
         )}
-        <p className="font-ui text-[0.7rem] tracking-[0.2em] text-faint uppercase">{experience.duration}</p>
+        <p className="font-ui text-faint text-[0.7rem] tracking-[0.2em] uppercase">{experience.duration}</p>
       </div>
       <div>
-        <h3 className={`${instrumentSerif.className} text-2xl leading-tight text-paper md:text-3xl`}>
+        <h3 className={`${instrumentSerif.className} text-paper text-2xl leading-tight md:text-3xl`}>
           {experience.role}
           <span className="text-faint"> — </span>
           <Link
             href={experience.companyUrl}
-            className="text-brass transition-colors hover:text-paper"
+            className="text-brass hover:text-paper transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
             {experience.company}
           </Link>
         </h3>
-        <p className="mt-4 max-w-prose leading-relaxed font-light text-paper-dim">{experience.description}</p>
-        <p className="font-ui mt-5 text-[0.7rem] tracking-[0.2em] text-faint uppercase">
+        <p className="text-paper-dim mt-4 max-w-prose leading-relaxed font-light">{experience.description}</p>
+        <p className="font-ui text-faint mt-5 text-[0.7rem] tracking-[0.2em] uppercase">
           {experience.techStack.join(" · ")}
         </p>
       </div>
@@ -50,7 +50,11 @@ export const MyWork = () => {
     <div className="mx-auto w-full">
       {/* Work Experience */}
       <SectionHeading title="my work" />
-      <div>{workExperiences.map(experience => <WorkEntry key={experience.company} experience={experience} />)}</div>
+      <div>
+        {workExperiences.map(experience => (
+          <WorkEntry key={experience.company} experience={experience} />
+        ))}
+      </div>
 
       {/* OSS Contributions */}
       <div className="mt-24">
@@ -60,10 +64,7 @@ export const MyWork = () => {
 
       {/* GitHub Calendar */}
       <div className="mt-24">
-        <h3 className={`${instrumentSerif.className} mb-6 text-2xl text-paper`}>the grind, mapped</h3>
-        <div className="w-full border border-hairline bg-ink-raised/50 p-4 sm:p-6">
-          <GitHubCalendar username={personalDetails.githubUsername} />
-        </div>
+        <GitHubCalendar username={personalDetails.githubUsername} title="the grind, mapped" />
       </div>
     </div>
   )

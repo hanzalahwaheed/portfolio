@@ -2,13 +2,17 @@
 
 import { useState, useMemo } from "react"
 import GitHubCalendar from "react-github-calendar"
+import { instrumentSerif } from "@/lib/fonts"
 
 interface GitHubCalendarProps {
   username: string
+  title: string
   className?: string
 }
 
-const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarProps) => {
+const calendarTheme = { dark: ["rgba(237, 230, 214, 0.07)", "var(--brass)"] }
+
+const GitHubCalendarComponent = ({ username, title, className = "" }: GitHubCalendarProps) => {
   const currentYear = new Date().getFullYear()
   const [selectedYear, setSelectedYear] = useState(currentYear)
   const Calendar = (GitHubCalendar as unknown as { default?: typeof GitHubCalendar }).default || GitHubCalendar
@@ -19,31 +23,30 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="mb-4 flex flex-wrap gap-2">
-        {years.map(year => (
-          <button
-            key={year}
-            onClick={() => setSelectedYear(year)}
-            className={`font-ui rounded-full px-4 py-1.5 text-[0.7rem] tracking-[0.2em] uppercase transition-all duration-200 ${
-              selectedYear === year
-                ? "border border-brass bg-brass/10 text-brass"
-                : "border border-hairline text-faint hover:border-paper/30 hover:text-paper"
-            }`}
-          >
-            {year}
-          </button>
-        ))}
+      <div className="border-hairline flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-b pb-5">
+        <h3 className={`${instrumentSerif.className} text-paper text-2xl`}>{title}</h3>
+        <div className="flex gap-6">
+          {years.map(year => (
+            <button
+              key={year}
+              onClick={() => setSelectedYear(year)}
+              aria-pressed={selectedYear === year}
+              className={`font-ui cursor-pointer text-[0.7rem] tracking-[0.2em] uppercase underline-offset-8 transition-colors duration-200 ${
+                selectedYear === year ? "text-brass underline" : "text-faint hover:text-paper"
+              }`}
+            >
+              {year}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="github-calendar-wrapper custom-scrollbar w-full overflow-x-auto pb-2">
+      <div className="github-calendar-wrapper custom-scrollbar text-paper-dim w-full overflow-x-auto pt-8 pb-2">
         <Calendar
           username={username}
           year={selectedYear}
           colorScheme="dark"
-          style={{
-            background: "transparent",
-            color: "#ede6d6",
-          }}
+          theme={calendarTheme}
           blockSize={10}
           blockMargin={3}
           fontSize={14}
@@ -52,44 +55,6 @@ const GitHubCalendarComponent = ({ username, className = "" }: GitHubCalendarPro
           hideColorLegend={false}
         />
       </div>
-
-      <style>{`
-        .github-calendar-wrapper :global(.react-activity-calendar) {
-          background: transparent !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar svg) {
-          background: transparent !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap) {
-          background: transparent !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap text) {
-          fill: #a89f8c !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-empty) {
-          fill: rgba(237, 230, 214, 0.07) !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-1) {
-          fill: #4a3d26 !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-2) {
-          fill: #7a6238 !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-3) {
-          fill: #a5854f !important;
-        }
-
-        .github-calendar-wrapper :global(.react-activity-calendar .react-calendar-heatmap .color-scale-4) {
-          fill: #c9a870 !important;
-        }
-      `}</style>
     </div>
   )
 }
