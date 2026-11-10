@@ -8,7 +8,6 @@ import MoreBelow from "@/components/more-below"
 import Blogs from "@/components/blogs"
 import FavReads from "@/components/fav-reads"
 import Grind from "@/components/grind"
-import Link from "@/components/app-link"
 import { loadPosts } from "@/lib/blogs"
 import { socialLinks } from "@/config"
 
@@ -154,19 +153,12 @@ function Home() {
       <div id="fav-reads">
         <FavReads />
       </div>
-      <Grind />
-      <footer
-        className={`border-hairline bg-ink flex h-56 flex-col items-center justify-center gap-3 border-t ${instrumentSerif.className}`}
-      >
-        <p className="text-paper-dim text-lg">Design and Development by Hanzalah Waheed</p>
-        <p className="font-ui text-faint text-[0.65rem] tracking-[0.3em] uppercase">&copy; {currentYear}</p>
-        <Link
-          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          className="font-ui text-faint hover:text-brass text-[0.65rem] tracking-[0.25em] uppercase transition-colors"
-          target="_blank"
-        >
-          Do not Click
-        </Link>
+      <footer className={`bg-ink ${instrumentSerif.className}`}>
+        <Grind />
+        <div className="flex h-56 flex-col items-center justify-center gap-3">
+          <p className="text-paper-dim text-lg">Design and Development by Hanzalah Waheed</p>
+          <p className="font-ui text-faint text-[0.65rem] tracking-[0.3em] uppercase">&copy; {currentYear}</p>
+        </div>
       </footer>
     </>
   )
