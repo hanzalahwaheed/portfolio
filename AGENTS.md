@@ -98,6 +98,6 @@ The root document runs `heroInitScript` in the head before hydration and then ex
 
 ## Skill routing
 
-Repository skills live in `.agents/skills`; the existing Claude/OpenCode paths link to these canonical copies. Use `.agents/skills/deploy/SKILL.md` for releases. Preserve the Vite/Nitro-to-Workers pipeline when using Cloudflare skills. Use the repository's `vercel-react-best-practices` for React work; its compatibility guidance takes precedence over generic Next.js examples.
+Repository skills live in `.agents/skills`; the existing Claude/OpenCode paths link to these canonical copies. Use `.agents/skills/release/SKILL.md` for releases. Preserve the Vite/Nitro-to-Workers pipeline when using Cloudflare skills. Use the repository's `vercel-react-best-practices` for React work; its compatibility guidance takes precedence over generic Next.js examples.
 
 For bugs and review, default to one focused `diagnosing-bugs` or `code-review` pass instead of duplicate skill runs. Use a focused `better-*` skill for a specific concern, `better-interface` for a broad UI pass, and `frontend-design` only for intentional redesign. Use `web-design-guidelines` for UI/UX audits. `web-perf` requires its measurement tools: if unavailable, continue meaningful lint, build, and manual checks and do not claim metrics were measured.
