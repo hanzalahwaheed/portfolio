@@ -190,3 +190,17 @@ body::after {
   background: transparent !important;
   padding: 0;
 }
+
+.footer-aurora {
+  background:
+    linear-gradient(to bottom, var(--ink) 0%, transparent 30%),
+    radial-gradient(
+      ellipse 85% 120% at 50% 125%,
+      color-mix(in srgb, var(--brass) 75%, transparent) 0%,
+      color-mix(in srgb, var(--brass) 28%, transparent) 42%,
+      transparent 78%
+    ),
+    radial-gradient(ellipse 50% 95% at 4% 115%, color-mix(in srgb, #7b5cc4 50%, transparent) 0%, transparent 72%),
+    radial-gradient(ellipse 50% 85% at 97% 112%, color-mix(in srgb, var(--brass) 40%, transparent) 0%, transparent 70%),
+    var(--ink);
+}

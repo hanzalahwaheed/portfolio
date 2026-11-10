@@ -153,7 +153,7 @@ function Home() {
       <div id="fav-reads">
         <FavReads />
       </div>
-      <footer className={`bg-ink ${instrumentSerif.className}`}>
+      <footer className={`footer-aurora ${instrumentSerif.className}`}>
         <Grind />
         <div className="flex h-56 flex-col items-center justify-center gap-3">
           <p className="text-paper-dim text-lg">Design and Development by Hanzalah Waheed</p>
