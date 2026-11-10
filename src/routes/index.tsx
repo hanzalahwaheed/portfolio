@@ -6,7 +6,7 @@ import AboutMe from "@/components/about-me"
 import Socials from "@/components/socials"
 import MoreBelow from "@/components/more-below"
 import Blogs from "@/components/blogs"
-import Bookery from "@/components/bookery"
+import FavReads from "@/components/fav-reads"
 import Grind from "@/components/grind"
 import Link from "@/components/app-link"
 import { loadPosts } from "@/lib/blogs"
@@ -151,8 +151,8 @@ function Home() {
       <div id="blogs">
         <Blogs posts={posts ?? []} error={postsError} />
       </div>
-      <div id="bookery">
-        <Bookery />
+      <div id="fav-reads">
+        <FavReads />
       </div>
       <Grind />
       <footer

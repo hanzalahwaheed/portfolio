@@ -166,59 +166,40 @@ export const builds: Build[] = [
   },
 ]
 
-export type Book = {
-  id: number
-  category: string
+export const readTopics = ["tech", "philosophy", "fiction", "other"] as const
+
+export type ReadTopic = (typeof readTopics)[number]
+
+export type Read = {
   title: string
-  subtitle: string
   author: string
-  cover: string
-  color: string
-  quote: string
-  rating: number
-  link: string
+  kind: "book" | "essay" | "blog" | "paper"
+  topic: ReadTopic
+  link?: string
+  note?: string
 }
 
-export const books: Book[] = [
+export const reads: Read[] = [
   {
-    id: 1,
-    category: "Tech",
     title: "Designing Data-Intensive Applications",
-    subtitle: "The Big Ideas Behind",
     author: "Martin Kleppmann",
-    cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=2574&auto=format&fit=crop",
-    color: "from-indigo-900/40 to-black",
-    quote: "",
-    rating: 4.8,
-    link: "#",
+    kind: "book",
+    topic: "tech",
+    link: "https://dataintensive.net/",
   },
   {
-    id: 2,
-    category: "Fiction",
     title: "The Harry Potter Series",
-    subtitle: "",
     author: "J.K. Rowling",
-    cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=2730&auto=format&fit=crop",
-    color: "from-amber-900/40 to-black",
-    quote: "Always.",
-    rating: 4.7,
-    link: "#",
+    kind: "book",
+    topic: "fiction",
   },
   {
-    id: 3,
-    category: "Fiction",
     title: "The Percy Jackson Series",
-    subtitle: "",
     author: "Rick Riordan",
-    cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=2730&auto=format&fit=crop",
-    color: "from-amber-900/40 to-black",
-    quote: "",
-    rating: 4.7,
-    link: "#",
+    kind: "book",
+    topic: "fiction",
   },
 ]
-
-export const bookCategories = ["All", "Non-Fiction", "Tech", "Fiction"]
 
 export type TechGroup = {
   label: string

@@ -69,10 +69,10 @@ const Navbar = () => {
             </NextLink>
             <button
               type="button"
-              onClick={() => scrollToSection("bookery")}
+              onClick={() => scrollToSection("fav-reads")}
               className="cursor-pointer font-medium text-white transition-colors duration-200 hover:text-[#e8d9b8]"
             >
-              Bookery
+              Fav Reads
             </button>
             <NextLink
               href="/resume"
