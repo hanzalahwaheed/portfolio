@@ -157,7 +157,7 @@ function Home() {
         <Grind />
         <div className="flex h-56 flex-col items-center justify-center gap-3">
           <p className="text-paper-dim text-lg">Design and Development by Hanzalah Waheed</p>
-          <p className="font-ui text-faint text-[0.65rem] tracking-[0.3em] uppercase">&copy; {currentYear}</p>
+          <p className="text-paper-dim uppercase">&copy; {currentYear}</p>
         </div>
       </footer>
     </>
